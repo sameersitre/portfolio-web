@@ -5,8 +5,11 @@ import { Skills } from "@/components/sections/Skills";
 import { Projects } from "@/components/sections/Projects";
 import { GitHub } from "@/components/sections/GitHub";
 import { Contact } from "@/components/sections/Contact";
+import { fetchGitHubData } from "@/lib/github";
 
-export default function Home() {
+export default async function Home() {
+  const githubData = await fetchGitHubData();
+
   return (
     <>
       <Hero />
@@ -14,7 +17,7 @@ export default function Home() {
       <Experience />
       <Skills />
       <Projects />
-      <GitHub />
+      <GitHub data={githubData} />
       <Contact />
     </>
   );

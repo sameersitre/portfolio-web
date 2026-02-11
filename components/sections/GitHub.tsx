@@ -1,12 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Star, GitFork, ExternalLink, Users, BookOpen, Activity, Flame } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getGitHubStats, getContributionsForYear, getAvailableYears } from "@/lib/github";
-import type { ContributionDay, ContributionWeek } from "@/lib/github";
+import type { ContributionDay, ContributionWeek, GitHubData } from "@/lib/github";
 import { cn } from "@/lib/utils";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -49,20 +48,17 @@ function ContributionTooltip({ day }: { day: ContributionDay }) {
 function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
 
-  const monthLabels = useMemo(() => {
-    const labels: { label: string; col: number }[] = [];
-    let lastMonth = -1;
-    weeks.forEach((week, i) => {
-      const firstDay = week.days[0];
-      if (!firstDay) return;
-      const month = new Date(firstDay.date).getMonth();
-      if (month !== lastMonth) {
-        labels.push({ label: MONTHS[month], col: i });
-        lastMonth = month;
-      }
-    });
-    return labels;
-  }, [weeks]);
+  const monthLabels: { label: string; col: number }[] = [];
+  let lastMonth = -1;
+  weeks.forEach((week, i) => {
+    const firstDay = week.days[0];
+    if (!firstDay) return;
+    const month = new Date(firstDay.date).getMonth();
+    if (month !== lastMonth) {
+      monthLabels.push({ label: MONTHS[month], col: i });
+      lastMonth = month;
+    }
+  });
 
   return (
     <div className="overflow-x-auto">
@@ -135,48 +131,10 @@ function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
   );
 }
 
-function ContributionGraph() {
-  const availableYears = useMemo(() => getAvailableYears(), []);
+export function GitHub({ data }: { data: GitHubData }) {
+  const { stats, pinnedRepos, years, availableYears } = data;
   const [selectedYear, setSelectedYear] = useState(availableYears[0]);
-  const yearData = useMemo(() => getContributionsForYear(selectedYear), [selectedYear]);
-
-  return (
-    <div>
-      {/* Year selector + contribution count */}
-      <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <Flame size={16} className="text-accent" />
-          <span className="text-sm font-medium text-foreground">
-            {yearData.total.toLocaleString()} contributions in {selectedYear}
-          </span>
-        </div>
-
-        {/* Year tabs */}
-        <div className="flex flex-wrap gap-1.5">
-          {availableYears.map((year) => (
-            <button
-              key={year}
-              onClick={() => setSelectedYear(year)}
-              className={cn(
-                "rounded-md px-2.5 py-1 text-xs font-medium transition-all",
-                selectedYear === year
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {year}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <ContributionGrid weeks={yearData.weeks} />
-    </div>
-  );
-}
-
-export function GitHub() {
-  const { stats, pinnedRepos } = useMemo(() => getGitHubStats(), []);
+  const yearData = years.find((y) => y.year === selectedYear) ?? years[0];
 
   const statCards = [
     { label: "Contributions", value: stats.totalContributions.toLocaleString(), icon: <Activity size={18} /> },
@@ -222,7 +180,35 @@ export function GitHub() {
         transition={{ duration: 0.5, ease: "easeOut" as const }}
         className="mb-10 rounded-xl border border-border bg-card p-6"
       >
-        <ContributionGraph />
+        {/* Year selector + contribution count */}
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Flame size={16} className="text-accent" />
+            <span className="text-sm font-medium text-foreground">
+              {yearData.total.toLocaleString()} contributions in {selectedYear}
+            </span>
+          </div>
+
+          {/* Year tabs */}
+          <div className="flex flex-wrap gap-1.5">
+            {availableYears.map((year) => (
+              <button
+                key={year}
+                onClick={() => setSelectedYear(year)}
+                className={cn(
+                  "rounded-md px-2.5 py-1 text-xs font-medium transition-all",
+                  selectedYear === year
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <ContributionGrid weeks={yearData.weeks} />
       </motion.div>
 
       {/* Pinned repos */}
