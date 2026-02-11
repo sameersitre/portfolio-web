@@ -1,65 +1,125 @@
-import Image from "next/image";
+import { Section } from "@/components/layout/Section";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <>
+      {/* Hero */}
+      <section id="hero" className="flex min-h-screen items-center px-6">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 font-mono text-sm text-accent">Hi, my name is</p>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl">
+            Sameer Sitre<span className="text-accent">.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
+            I build things for the web.
+          </h2>
+          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+            Senior Frontend Engineer with 7+ years of experience delivering
+            secure, scalable web and mobile applications. Currently building
+            high-impact solutions at{" "}
+            <span className="text-accent">The Real Brokerage</span>.
           </p>
+          <div className="mt-10 flex gap-4">
+            <a
+              href="#contact"
+              className="rounded-full border border-accent bg-accent/10 px-6 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
+            >
+              Get in Touch
+            </a>
+            <a
+              href="#projects"
+              className="rounded-full border border-border px-6 py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent"
+            >
+              See My Work
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* About */}
+      <Section id="about">
+        <SectionHeading
+          title="About"
+          subtitle="A few things about me"
+        />
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="space-y-4 text-muted-foreground">
+            <p>
+              I&apos;m a software engineer who loves building products that people
+              actually use. With 7+ years in the industry, I&apos;ve shipped
+              production features to thousands of users across global markets.
+            </p>
+            <p>
+              My expertise spans web and mobile development — from design system
+              architecture and performance optimisation to end-to-end test
+              automation and security hardening.
+            </p>
+            <p>
+              When I&apos;m not coding, you&apos;ll find me cycling, playing chess, or
+              exploring the latest in AI-driven development workflows.
+            </p>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="h-64 w-64 rounded-2xl border-2 border-accent/20 bg-muted" />
+          </div>
         </div>
-      </main>
-    </div>
+      </Section>
+
+      {/* Experience */}
+      <Section id="experience">
+        <SectionHeading
+          title="Experience"
+          subtitle="Where I've worked"
+        />
+        <p className="text-muted-foreground">Experience section coming soon...</p>
+      </Section>
+
+      {/* Skills */}
+      <Section id="skills">
+        <SectionHeading
+          title="Skills"
+          subtitle="Technologies I work with"
+        />
+        <p className="text-muted-foreground">Skills section coming soon...</p>
+      </Section>
+
+      {/* Projects */}
+      <Section id="projects">
+        <SectionHeading
+          title="Projects"
+          subtitle="Things I've built"
+        />
+        <p className="text-muted-foreground">Projects section coming soon...</p>
+      </Section>
+
+      {/* GitHub */}
+      <Section id="github">
+        <SectionHeading
+          title="GitHub"
+          subtitle="My open source activity"
+        />
+        <p className="text-muted-foreground">GitHub contributions section coming soon...</p>
+      </Section>
+
+      {/* Contact */}
+      <Section id="contact">
+        <SectionHeading
+          title="Get In Touch"
+          subtitle="Let's work together"
+        />
+        <p className="max-w-lg text-muted-foreground">
+          I&apos;m currently open to new opportunities and interesting projects.
+          Whether you have a question or just want to say hi, my inbox is always
+          open.
+        </p>
+        <a
+          href="mailto:sameersitre@gmail.com"
+          className="mt-8 inline-block rounded-full border border-accent bg-accent/10 px-8 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
+        >
+          Say Hello
+        </a>
+      </Section>
+    </>
   );
 }
