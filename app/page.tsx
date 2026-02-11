@@ -3,6 +3,7 @@ import { About } from "@/components/sections/About";
 import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
 import { Projects } from "@/components/sections/Projects";
+import { GitHub } from "@/components/sections/GitHub";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -18,13 +19,7 @@ export default function Home() {
 
       <Projects />
 
-      {/* GitHub */}
-      <Section id="github">
-        <SectionHeading title="GitHub" subtitle="My open source activity" />
-        <p className="text-muted-foreground">
-          GitHub contributions section coming soon...
-        </p>
-      </Section>
+      <GitHub />
 
       {/* Contact */}
       <Section id="contact">
