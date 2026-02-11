@@ -1,5 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
+import { Experience } from "@/components/sections/Experience";
+import { Skills } from "@/components/sections/Skills";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -9,19 +11,9 @@ export default function Home() {
       <Hero />
       <About />
 
-      {/* Experience */}
-      <Section id="experience">
-        <SectionHeading title="Experience" subtitle="Where I've worked" />
-        <p className="text-muted-foreground">
-          Experience section coming soon...
-        </p>
-      </Section>
+      <Experience />
 
-      {/* Skills */}
-      <Section id="skills">
-        <SectionHeading title="Skills" subtitle="Technologies I work with" />
-        <p className="text-muted-foreground">Skills section coming soon...</p>
-      </Section>
+      <Skills />
 
       {/* Projects */}
       <Section id="projects">
