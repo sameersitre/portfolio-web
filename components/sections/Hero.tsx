@@ -47,7 +47,7 @@ export function Hero() {
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 dark:opacity-100"
         style={{
-          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.06), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.1), transparent 90%)`,
         }}
       />
 
