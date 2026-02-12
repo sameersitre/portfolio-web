@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Folder } from "lucide-react";
 import { Section } from "@/components/layout/Section";
@@ -20,7 +20,11 @@ const container = {
 
 const cardItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
 };
 
 export function Projects() {
@@ -45,7 +49,7 @@ export function Projects() {
               "rounded-full px-4 py-1.5 text-sm font-medium transition-all",
               activeFilter === filter
                 ? "bg-accent text-accent-foreground"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
             {filter}
@@ -55,10 +59,10 @@ export function Projects() {
 
       {/* Project grid */}
       <motion.div
+        key={activeFilter}
         variants={container}
         initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
+        animate="show"
         className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
         {filteredProjects.map((project) => (

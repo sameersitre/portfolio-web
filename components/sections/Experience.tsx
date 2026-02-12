@@ -42,7 +42,7 @@ export function Experience() {
                     "absolute left-2 top-6 hidden h-5 w-5 rounded-full border-2 md:left-[1.375rem] md:block",
                     isExpanded
                       ? "border-accent bg-accent/20"
-                      : "border-border bg-background"
+                      : "border-border bg-background",
                   )}
                 />
 
@@ -52,14 +52,12 @@ export function Experience() {
                     "rounded-xl border transition-all duration-300",
                     isExpanded
                       ? "border-accent/30 bg-card shadow-lg shadow-accent/5"
-                      : "border-border bg-card hover:border-accent/20"
+                      : "border-border bg-card hover:border-accent/20",
                   )}
                 >
                   {/* Header — always visible */}
                   <button
-                    onClick={() =>
-                      setExpandedIndex(isExpanded ? -1 : index)
-                    }
+                    onClick={() => setExpandedIndex(isExpanded ? -1 : index)}
                     className="flex w-full items-start justify-between p-6 text-left"
                   >
                     <div className="flex-1">
@@ -89,7 +87,7 @@ export function Experience() {
                       size={20}
                       className={cn(
                         "mt-1 shrink-0 text-muted-foreground transition-transform duration-300",
-                        isExpanded && "rotate-180"
+                        isExpanded && "rotate-180",
                       )}
                     />
                   </button>
@@ -101,7 +99,10 @@ export function Experience() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" as const }}
+                        transition={{
+                          duration: 0.3,
+                          ease: "easeInOut" as const,
+                        }}
                         className="overflow-hidden"
                       >
                         <div className="space-y-6 px-6 pb-6">

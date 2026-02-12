@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileDown } from "lucide-react";
+import { Menu, X, FileDown, Github } from "lucide-react";
 import { navItems, siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -45,7 +45,7 @@ export function Header() {
         "fixed top-0 z-50 w-full transition-all duration-300",
         isScrolled
           ? "border-b border-border bg-background/80 backdrop-blur-md"
-          : "bg-transparent"
+          : "bg-transparent",
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -71,7 +71,7 @@ export function Header() {
                   "text-sm transition-colors hover:text-accent",
                   activeSection === item.href.replace("#", "")
                     ? "text-accent"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 {item.label}
@@ -83,12 +83,20 @@ export function Header() {
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
           <a
-            href="/Sameer_Sitre_CV_2026.pdf"
+            href="https://github.com/sameersitre/portfolio-web"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground transition-colors hover:text-accent"
+            aria-label="View source on GitHub"
+          >
+            <Github size={20} />
+          </a>
+          <a
+            href="https://drive.google.com/file/d/1wrCdThQQUx355icNMoc45dA-qPRcJ_B0/view?usp=drive_link"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
           >
-            <FileDown size={16} />
             Resume
           </a>
         </div>
@@ -124,19 +132,29 @@ export function Header() {
                       "w-full rounded-lg px-4 py-3 text-left text-sm transition-colors hover:bg-muted",
                       activeSection === item.href.replace("#", "")
                         ? "text-accent"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                   >
                     {item.label}
                   </button>
                 </li>
               ))}
-              <li>
+              <li className="mt-2 flex items-center gap-3">
+                <a
+                  href="https://github.com/sameersitre/portfolio-web"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent"
+                  aria-label="View source on GitHub"
+                >
+                  <Github size={16} />
+                  Source
+                </a>
                 <a
                   href="/Sameer_Sitre_CV_2026.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent"
+                  className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent"
                 >
                   <FileDown size={16} />
                   Resume

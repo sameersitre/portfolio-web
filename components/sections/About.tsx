@@ -21,7 +21,11 @@ const statsContainer = {
 
 const statItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
 };
 
 export function About() {
@@ -45,10 +49,10 @@ export function About() {
             production releases across multiple engineering teams.
           </p>
           <p>
-            Currently at <span className="text-accent">The Real Brokerage</span>,
-            I work across both web (React + TypeScript) and mobile (React Native)
-            platforms. I&apos;m passionate about AI-driven development workflows
-            and building tools that make developers more productive.
+            Currently at <span className="text-accent">The Real Brokerage</span>
+            , I work across both web (React + TypeScript) and mobile (React
+            Native) platforms. I&apos;m passionate about AI-driven development
+            workflows and building tools that make developers more productive.
           </p>
           <p>
             When I&apos;m not coding, you&apos;ll find me cycling, playing

@@ -14,19 +14,20 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const },
+  },
 };
 
 export function Hero() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    },
-    []
-  );
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
 
   return (
     <section
@@ -38,7 +39,8 @@ export function Hero() {
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, currentColor 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
@@ -84,9 +86,7 @@ export function Hero() {
           className="mt-6 max-w-xl text-lg text-muted-foreground"
         >
           Senior Frontend Engineer with 7+ years of experience delivering
-          secure, scalable web and mobile applications. Currently building
-          high-impact solutions at{" "}
-          <span className="text-accent">The Real Brokerage</span>.
+          secure, scalable web and mobile applications.
         </motion.p>
 
         <motion.div variants={item} className="mt-10 flex gap-4">

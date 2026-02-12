@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SkipToContent } from "@/components/ui/SkipToContent";
+import { FloTraceProvider } from "@/lib/flotrace/index.mjs";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -132,8 +134,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#0a0a0a"
+          media="(prefers-color-scheme: dark)"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -143,13 +153,20 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <SkipToContent />
-          <ScrollProgress />
-          <SmoothScroll>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </SmoothScroll>
+          <FloTraceProvider
+            config={{
+              appName: "Sameer Portfolio",
+              enabled: process.env.NODE_ENV === "development",
+            }}
+          >
+            <SkipToContent />
+            <ScrollProgress />
+            <SmoothScroll>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </SmoothScroll>
+          </FloTraceProvider>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

@@ -22,7 +22,7 @@ export function ThemeToggle() {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className={cn(
         "rounded-full p-2 transition-colors",
-        "text-muted-foreground hover:bg-muted hover:text-foreground"
+        "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
       aria-label="Toggle theme"
     >

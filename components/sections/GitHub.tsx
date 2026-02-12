@@ -2,13 +2,39 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Star, GitFork, ExternalLink, Users, BookOpen, Activity, Flame } from "lucide-react";
+import {
+  Github,
+  Star,
+  GitFork,
+  ExternalLink,
+  Users,
+  BookOpen,
+  Activity,
+  Flame,
+} from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import type { ContributionDay, ContributionWeek, GitHubData } from "@/lib/github";
+import type {
+  ContributionDay,
+  ContributionWeek,
+  GitHubData,
+} from "@/lib/github";
 import { cn } from "@/lib/utils";
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const levelColors = {
   0: "bg-muted",
@@ -28,7 +54,11 @@ const container = {
 
 const cardItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" as const },
+  },
 };
 
 function ContributionTooltip({ day }: { day: ContributionDay }) {
@@ -72,7 +102,10 @@ function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
               style={{
                 position: "relative",
                 left: `${col * 13}px`,
-                marginRight: i < monthLabels.length - 1 ? `${((monthLabels[i + 1]?.col ?? col) - col) * 13 - 24}px` : 0,
+                marginRight:
+                  i < monthLabels.length - 1
+                    ? `${((monthLabels[i + 1]?.col ?? col) - col) * 13 - 24}px`
+                    : 0,
               }}
             >
               {label}
@@ -83,9 +116,15 @@ function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
         {/* Grid */}
         <div className="flex gap-[3px]">
           {/* Day labels */}
-          <div className="flex flex-col justify-between py-[2px]" style={{ gap: "3px" }}>
+          <div
+            className="flex flex-col justify-between py-[2px]"
+            style={{ gap: "3px" }}
+          >
             {["", "Mon", "", "Wed", "", "Fri", ""].map((day, i) => (
-              <span key={i} className="h-[10px] text-[10px] leading-[10px] text-muted-foreground">
+              <span
+                key={i}
+                className="h-[10px] text-[10px] leading-[10px] text-muted-foreground"
+              >
                 {day}
               </span>
             ))}
@@ -105,7 +144,7 @@ function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
                     className={cn(
                       "h-[10px] w-[10px] rounded-[2px] transition-all",
                       levelColors[day.level],
-                      hoveredDay === day.date && "ring-1 ring-accent"
+                      hoveredDay === day.date && "ring-1 ring-accent",
                     )}
                   />
                   {hoveredDay === day.date && <ContributionTooltip day={day} />}
@@ -121,7 +160,10 @@ function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
           {([0, 1, 2, 3, 4] as const).map((level) => (
             <div
               key={level}
-              className={cn("h-[10px] w-[10px] rounded-[2px]", levelColors[level])}
+              className={cn(
+                "h-[10px] w-[10px] rounded-[2px]",
+                levelColors[level],
+              )}
             />
           ))}
           <span>More</span>
@@ -137,8 +179,16 @@ export function GitHub({ data }: { data: GitHubData }) {
   const yearData = years.find((y) => y.year === selectedYear) ?? years[0];
 
   const statCards = [
-    { label: "Contributions", value: stats.totalContributions.toLocaleString(), icon: <Activity size={18} /> },
-    { label: "Public Repos", value: stats.publicRepos, icon: <BookOpen size={18} /> },
+    {
+      label: "Contributions",
+      value: stats.totalContributions.toLocaleString(),
+      icon: <Activity size={18} />,
+    },
+    {
+      label: "Public Repos",
+      value: stats.publicRepos,
+      icon: <BookOpen size={18} />,
+    },
     { label: "Total Stars", value: stats.totalStars, icon: <Star size={18} /> },
     { label: "Followers", value: stats.followers, icon: <Users size={18} /> },
   ];
@@ -165,7 +215,9 @@ export function GitHub({ data }: { data: GitHubData }) {
               {stat.icon}
             </div>
             <div>
-              <div className="text-lg font-bold text-foreground">{stat.value}</div>
+              <div className="text-lg font-bold text-foreground">
+                {stat.value}
+              </div>
               <div className="text-xs text-muted-foreground">{stat.label}</div>
             </div>
           </motion.div>
@@ -199,7 +251,7 @@ export function GitHub({ data }: { data: GitHubData }) {
                   "rounded-md px-2.5 py-1 text-xs font-medium transition-all",
                   selectedYear === year
                     ? "bg-accent text-accent-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground",
                 )}
               >
                 {year}
@@ -235,7 +287,10 @@ export function GitHub({ data }: { data: GitHubData }) {
                   {repo.name}
                 </span>
               </div>
-              <ExternalLink size={14} className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+              <ExternalLink
+                size={14}
+                className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+              />
             </div>
 
             <p className="mt-2 flex-1 text-sm text-muted-foreground">
