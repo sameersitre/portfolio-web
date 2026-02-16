@@ -1,6 +1,7 @@
 # SEO Implementation Plan
 
 ## Current State: 7.5/10
+
 Solid foundation with metadata, JSON-LD, robots, sitemap, semantic HTML, and accessibility. Missing social image previews, advanced structured data, analytics, and performance monitoring.
 
 ---
@@ -96,6 +97,7 @@ Solid foundation with metadata, JSON-LD, robots, sitemap, semantic HTML, and acc
 ## Verification Checklist
 
 After all phases:
+
 - [ ] `npm run build` — zero errors
 - [ ] Test OG image at opengraph.xyz
 - [ ] Validate JSON-LD at https://search.google.com/test/rich-results

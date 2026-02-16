@@ -11,15 +11,15 @@ A modern, dark-themed, single-page portfolio website for **Sameer Sitre** — Se
 
 ## Design Direction
 
-| Aspect | Decision |
-|--------|----------|
-| **Theme** | Dark-first with light mode toggle |
-| **Primary BG** | Deep navy (#0a0a1a) or charcoal (#0f172a) |
-| **Accent Color** | Electric amber/orange (#f59e0b) — matching CV branding |
-| **Typography** | Geist Sans (already set up) + Geist Mono for code |
-| **Layout** | Single-page scrolling with fixed side/top navigation |
-| **Animations** | Subtle scroll-triggered reveals, cursor glow, hover micro-interactions |
-| **Inspiration** | brittanychiang.com (layout/nav), leerob.com (minimalism), dennissnellenberg.com (smooth scroll) |
+| Aspect           | Decision                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| **Theme**        | Dark-first with light mode toggle                                                               |
+| **Primary BG**   | Deep navy (#0a0a1a) or charcoal (#0f172a)                                                       |
+| **Accent Color** | Electric amber/orange (#f59e0b) — matching CV branding                                          |
+| **Typography**   | Geist Sans (already set up) + Geist Mono for code                                               |
+| **Layout**       | Single-page scrolling with fixed side/top navigation                                            |
+| **Animations**   | Subtle scroll-triggered reveals, cursor glow, hover micro-interactions                          |
+| **Inspiration**  | brittanychiang.com (layout/nav), leerob.com (minimalism), dennissnellenberg.com (smooth scroll) |
 
 ---
 
@@ -39,9 +39,11 @@ A modern, dark-themed, single-page portfolio website for **Sameer Sitre** — Se
 ## Phase 1: Foundation & Layout (Core Structure)
 
 ### Goals
+
 Set up the project foundation, global styles, reusable layout components, and navigation.
 
 ### Tasks
+
 - [ ] **Clean up boilerplate** — Remove default Next.js template content from `page.tsx` and `globals.css`
 - [ ] **Install dependencies**
   - `framer-motion` — Animations
@@ -67,6 +69,7 @@ Set up the project foundation, global styles, reusable layout components, and na
 - [ ] **Responsive breakpoints** — Ensure mobile-first design across all layouts
 
 ### Deliverable
+
 A fully navigable shell with header, footer, smooth scrolling, and theme toggle — no content yet.
 
 ---
@@ -74,9 +77,11 @@ A fully navigable shell with header, footer, smooth scrolling, and theme toggle 
 ## Phase 2: Hero & About Sections
 
 ### Goals
+
 Create the first impression — hero section with animated intro, and an about section with personality.
 
 ### Tasks
+
 - [ ] **Hero Section** (`components/sections/Hero.tsx`)
   - Large heading: "Sameer Sitre" with text reveal animation
   - Subtitle: "Senior Frontend Engineer"
@@ -95,6 +100,7 @@ Create the first impression — hero section with animated intro, and an about s
   - Scroll-triggered fade-in animations
 
 ### Deliverable
+
 A compelling hero with animated text and a personal about section that tells your story.
 
 ---
@@ -102,9 +108,11 @@ A compelling hero with animated text and a personal about section that tells you
 ## Phase 3: Experience Section
 
 ### Goals
+
 Showcase professional journey with an interactive timeline.
 
 ### Tasks
+
 - [ ] **Experience Section** (`components/sections/Experience.tsx`)
   - Interactive vertical timeline or tabbed layout
   - Three entries:
@@ -126,6 +134,7 @@ Showcase professional journey with an interactive timeline.
   - Scroll-triggered staggered reveal animation
 
 ### Deliverable
+
 A professional experience timeline that highlights impact and growth across roles.
 
 ---
@@ -133,9 +142,11 @@ A professional experience timeline that highlights impact and growth across role
 ## Phase 4: Skills / Tech Stack Section
 
 ### Goals
+
 Visually showcase technical proficiency across categories.
 
 ### Tasks
+
 - [ ] **Skills Section** (`components/sections/Skills.tsx`)
   - Grouped by category with icons:
     - **Languages:** TypeScript, JavaScript ES6+, HTML5, CSS3
@@ -152,6 +163,7 @@ Visually showcase technical proficiency across categories.
   - Optional: animated entrance as cards/icons stagger in on scroll
 
 ### Deliverable
+
 A clean, visual tech stack display grouped by category.
 
 ---
@@ -159,9 +171,11 @@ A clean, visual tech stack display grouped by category.
 ## Phase 5: Projects Section
 
 ### Goals
+
 Showcase best work with rich project cards including live demos and source code.
 
 ### Tasks
+
 - [ ] **Projects Section** (`components/sections/Projects.tsx`)
   - **Featured Projects** (large cards with screenshots):
     1. **Bingefeast** — PWA for discovering movies/TV shows
@@ -190,6 +204,7 @@ Showcase best work with rich project cards including live demos and source code.
   - Scroll-triggered staggered entrance
 
 ### Deliverable
+
 A polished project showcase with rich cards, tech tags, and live/source links.
 
 ---
@@ -197,9 +212,11 @@ A polished project showcase with rich cards, tech tags, and live/source links.
 ## Phase 6: GitHub Contributions Section
 
 ### Goals
+
 Showcase open source activity, contribution consistency, and coding presence using live GitHub data.
 
 ### Tasks
+
 - [ ] **GitHub Section** (`components/sections/GitHub.tsx`)
   - **Contribution Graph / Heatmap**
     - Fetch contribution data via GitHub GraphQL API
@@ -231,6 +248,7 @@ Showcase open source activity, contribution consistency, and coding presence usi
   - Scroll-triggered entrance animation
 
 ### Deliverable
+
 A live GitHub activity section showing contribution graph, repo stats, and pinned repositories — all fetched from the GitHub API.
 
 ---
@@ -238,9 +256,11 @@ A live GitHub activity section showing contribution graph, repo stats, and pinne
 ## Phase 7: Contact Section & Form
 
 ### Goals
+
 Make it easy for recruiters and collaborators to reach out.
 
 ### Tasks
+
 - [ ] **Contact Section** (`components/sections/Contact.tsx`)
   - Heading: "Get In Touch"
   - Brief message: "I'm currently open to new opportunities..."
@@ -257,6 +277,7 @@ Make it easy for recruiters and collaborators to reach out.
   - Success/error toast notifications
 
 ### Deliverable
+
 A functional contact section with form submission and social links.
 
 ---
@@ -264,9 +285,11 @@ A functional contact section with form submission and social links.
 ## Phase 8: Polish, Animations & Performance
 
 ### Goals
+
 Elevate the site with refined animations, micro-interactions, and performance optimization.
 
 ### Tasks
+
 - [ ] **Animations & Micro-interactions**
   - Cursor glow/spotlight effect on hero (inspired by brittanychiang.com)
   - Magnetic button hover effects
@@ -295,6 +318,7 @@ Elevate the site with refined animations, micro-interactions, and performance op
   - Screen reader testing
 
 ### Deliverable
+
 A polished, performant, accessible, and SEO-optimized portfolio.
 
 ---
@@ -302,9 +326,11 @@ A polished, performant, accessible, and SEO-optimized portfolio.
 ## Phase 9: Deployment & Launch
 
 ### Goals
+
 Deploy to production and ensure everything works flawlessly.
 
 ### Tasks
+
 - [ ] **Vercel Deployment**
   - Connect GitHub repo to Vercel
   - Configure custom domain: sameersitre.dev
@@ -327,6 +353,7 @@ Deploy to production and ensure everything works flawlessly.
   - Open Graph preview image for social sharing
 
 ### Deliverable
+
 A live, production-ready portfolio at sameersitre.dev.
 
 ---
@@ -382,15 +409,15 @@ portfolio-web/
 
 ## Dependencies to Install
 
-| Package | Purpose | Phase |
-|---------|---------|-------|
-| `framer-motion` | Scroll animations, entrance effects, page transitions | 1 |
-| `lucide-react` | Icon library (lightweight, tree-shakable) | 1 |
-| `lenis` | Smooth scrolling | 1 |
-| `next-themes` | Dark/light mode management | 1 |
-| `clsx` + `tailwind-merge` | Conditional class utilities | 1 |
-| `next-sitemap` | Sitemap & robots.txt generation | 8 |
-| `resend` or `@formspree/react` | Contact form email delivery | 7 |
+| Package                        | Purpose                                               | Phase |
+| ------------------------------ | ----------------------------------------------------- | ----- |
+| `framer-motion`                | Scroll animations, entrance effects, page transitions | 1     |
+| `lucide-react`                 | Icon library (lightweight, tree-shakable)             | 1     |
+| `lenis`                        | Smooth scrolling                                      | 1     |
+| `next-themes`                  | Dark/light mode management                            | 1     |
+| `clsx` + `tailwind-merge`      | Conditional class utilities                           | 1     |
+| `next-sitemap`                 | Sitemap & robots.txt generation                       | 8     |
+| `resend` or `@formspree/react` | Contact form email delivery                           | 7     |
 
 ---
 
@@ -410,14 +437,14 @@ portfolio-web/
 
 ## Summary
 
-| Phase | Focus | Key Outcome |
-|-------|-------|-------------|
-| **1** | Foundation & Layout | Navigable shell with theme toggle |
-| **2** | Hero & About | Compelling first impression |
-| **3** | Experience | Professional journey timeline |
-| **4** | Skills | Visual tech stack display |
-| **5** | Projects | Rich project showcase |
+| Phase | Focus                | Key Outcome                                   |
+| ----- | -------------------- | --------------------------------------------- |
+| **1** | Foundation & Layout  | Navigable shell with theme toggle             |
+| **2** | Hero & About         | Compelling first impression                   |
+| **3** | Experience           | Professional journey timeline                 |
+| **4** | Skills               | Visual tech stack display                     |
+| **5** | Projects             | Rich project showcase                         |
 | **6** | GitHub Contributions | Live contribution graph, stats & pinned repos |
-| **7** | Contact | Functional contact form |
-| **8** | Polish & Performance | Animations, SEO, accessibility |
-| **9** | Deployment | Live at sameersitre.dev |
+| **7** | Contact              | Functional contact form                       |
+| **8** | Polish & Performance | Animations, SEO, accessibility                |
+| **9** | Deployment           | Live at sameersitre.dev                       |
