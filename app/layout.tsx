@@ -4,7 +4,6 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SkipToContent } from "@/components/ui/SkipToContent";
-import { FloTraceProvider } from "@/lib/flotrace/index.mjs";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
@@ -153,20 +152,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <FloTraceProvider
-            config={{
-              appName: "Sameer Portfolio",
-              enabled: process.env.NODE_ENV === "development",
-            }}
-          >
-            <SkipToContent />
-            <ScrollProgress />
-            <SmoothScroll>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </SmoothScroll>
-          </FloTraceProvider>
+          <SkipToContent />
+          <ScrollProgress />
+          <SmoothScroll>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
