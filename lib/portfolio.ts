@@ -4,8 +4,7 @@
 
 import { experiences, skillCategories, projects } from "@/lib/data";
 
-const BACKEND_URL =
-  process.env.BACKEND_INTERNAL_URL ?? "http://backend:8000";
+const BACKEND_URL = process.env.BACKEND_INTERNAL_URL;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,6 +43,11 @@ function getFallbackData(): PortfolioData {
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export async function fetchPortfolioData(): Promise<PortfolioData> {
+  // No backend configured — use static content. The Docker compose deploy
+  // sets BACKEND_INTERNAL_URL; standalone deploys (Vercel etc.) skip the
+  // fetch entirely.
+  if (!BACKEND_URL) return getFallbackData();
+
   try {
     const data = await fetchPortfolioFromAPI();
     // If DB is empty (seeding hasn't happened yet), fall back to static data
