@@ -1,5 +1,8 @@
 "use client";
 
+// Section wrapper used by every page section: standard padding, max-width, and
+// view-port reveal animation.
+
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 

@@ -1,5 +1,8 @@
 "use client";
 
+// Sun/Moon button toggling next-themes between dark and light.
+// Renders a placeholder until mounted to avoid hydration mismatch.
+
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";

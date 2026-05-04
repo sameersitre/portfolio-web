@@ -1,36 +1,61 @@
 "use client";
 
+// Site header: brand, primary nav (with scroll-spy active section), theme toggle,
+// resume link, and mobile menu drawer.
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileDown, Github } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { navItems, siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
+// Pixels of vertical scroll before the header switches to the blurred state.
+const SCROLL_THRESHOLD_PX = 50;
+// A section is considered "active" once its top is within this many pixels of the viewport top.
+const ACTIVE_SECTION_OFFSET_PX = 120;
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
+  // Toggle the blurred header background once the user has scrolled past the threshold.
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-
-      const sections = navItems.map((item) => item.href.replace("#", ""));
-      for (const section of sections.reverse()) {
-        const el = document.getElementById(section);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 120) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
+      setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track the active section via IntersectionObserver instead of reading
+  // getBoundingClientRect() on every scroll frame. The rootMargin defines a
+  // narrow band starting at ACTIVE_SECTION_OFFSET_PX from the top; whichever
+  // section's top crosses into that band becomes active.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: `-${ACTIVE_SECTION_OFFSET_PX}px 0px -60% 0px`,
+        threshold: 0,
+      },
+    );
+
+    navItems.forEach((item) => {
+      const el = document.getElementById(item.href.replace("#", ""));
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = (href: string) => {
@@ -83,16 +108,16 @@ export function Header() {
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
           <a
-            href="https://github.com/sameersitre/portfolio-web"
+            href={siteConfig.links.sourceRepo}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground transition-colors hover:text-accent"
             aria-label="View source on GitHub"
           >
-            <Github size={20} />
+            <GithubIcon size={20} />
           </a>
           <a
-            href="https://drive.google.com/file/d/1wrCdThQQUx355icNMoc45dA-qPRcJ_B0/view?usp=drive_link"
+            href={siteConfig.links.resume}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
@@ -104,6 +129,14 @@ export function Header() {
         {/* Mobile Menu Toggle */}
         <div className="flex items-center gap-3 md:hidden">
           <ThemeToggle />
+          <a
+            href={siteConfig.links.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-full border border-accent bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+          >
+            Resume
+          </a>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-foreground"
@@ -141,23 +174,14 @@ export function Header() {
               ))}
               <li className="mt-2 flex items-center gap-3">
                 <a
-                  href="https://github.com/sameersitre/portfolio-web"
+                  href={siteConfig.links.sourceRepo}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent"
                   aria-label="View source on GitHub"
                 >
-                  <Github size={16} />
+                  <GithubIcon size={16} />
                   Source
-                </a>
-                <a
-                  href="/Sameer_Sitre_CV_2026.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent"
-                >
-                  <FileDown size={16} />
-                  Resume
                 </a>
               </li>
             </ul>

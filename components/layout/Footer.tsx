@@ -1,4 +1,5 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+// Site footer: tech stack credit and copyright.
+
 import { siteConfig } from "@/lib/data";
 
 export function Footer() {

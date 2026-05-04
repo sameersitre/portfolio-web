@@ -1,22 +1,25 @@
 "use client";
 
+// Contact section: short blurb, contact details, and social links row.
+
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { fadeUp, staggerContainer } from "@/lib/animations";
 import { siteConfig } from "@/lib/data";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 
 const socialLinks = [
   {
     label: "GitHub",
     href: siteConfig.links.github,
-    icon: <Github size={20} />,
+    icon: <GithubIcon size={20} />,
   },
   {
     label: "LinkedIn",
     href: siteConfig.links.linkedin,
-    icon: <Linkedin size={20} />,
+    icon: <LinkedinIcon size={20} />,
   },
   {
     label: "Email",
@@ -39,49 +42,10 @@ const contactInfo = [
   { icon: <MapPin size={16} />, label: siteConfig.location, href: undefined },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  },
-};
+const container = staggerContainer(0.1);
+const item = fadeUp();
 
 export function Contact() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sending");
-
-    // TODO: Replace with actual form submission (Resend, Formspree, or Server Action)
-    // Simulating submission for now
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setStatus("sent");
-    setFormState({ name: "", email: "", message: "" });
-
-    setTimeout(() => setStatus("idle"), 4000);
-  };
-
-  const isValid =
-    formState.name.trim() && formState.email.trim() && formState.message.trim();
-
   return (
     <Section id="contact">
       <SectionHeading title="Get In Touch" subtitle="Let's work together" />

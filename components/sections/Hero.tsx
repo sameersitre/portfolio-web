@@ -1,32 +1,29 @@
 "use client";
 
-import { useState, useCallback } from "react";
+// Hero section: animated headline + cursor-following spotlight glow.
+// The spotlight is updated via direct DOM mutation (ref + style) so mouse
+// movement does not trigger React re-renders of the staggered headline.
+
+import { useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import { fadeUp, staggerContainer } from "@/lib/animations";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.3 },
-  },
-};
+const SPOTLIGHT_RADIUS_PX = 600;
 
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const },
-  },
-};
+const container = staggerContainer(0.15, 0.3);
+const item = fadeUp(0.6, 30);
 
 export function Hero() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const spotlight = spotlightRef.current;
+    if (!spotlight) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spotlight.style.background = `radial-gradient(${SPOTLIGHT_RADIUS_PX}px circle at ${x}px ${y}px, rgba(245, 158, 11, 0.1), transparent 90%)`;
   }, []);
 
   return (
@@ -45,12 +42,10 @@ export function Hero() {
         }}
       />
 
-      {/* Cursor spotlight glow */}
+      {/* Cursor spotlight glow — background is mutated imperatively via spotlightRef. */}
       <div
+        ref={spotlightRef}
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 dark:opacity-100"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.1), transparent 90%)`,
-        }}
       />
 
       {/* Content */}

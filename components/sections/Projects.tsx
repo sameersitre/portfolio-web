@@ -1,34 +1,29 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+// Projects section: filter tabs + animated grid of project cards.
+
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Folder } from "lucide-react";
+import { ExternalLink, Folder } from "lucide-react";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { projects } from "@/lib/data";
+import { fadeUp, staggerContainer } from "@/lib/animations";
+import type { Project } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 
+interface Props {
+  projects: Project[];
+}
+
 const filters = ["All", "Web", "Mobile", "Library"] as const;
+type Filter = (typeof filters)[number];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
+const container = staggerContainer(0.1);
+const cardItem = fadeUp(0.5);
 
-const cardItem = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" as const },
-  },
-};
-
-export function Projects() {
-  const [activeFilter, setActiveFilter] = useState<string>("All");
+export function Projects({ projects }: Props) {
+  const [activeFilter, setActiveFilter] = useState<Filter>("All");
 
   const filteredProjects =
     activeFilter === "All"
@@ -79,7 +74,7 @@ export function Projects() {
               </div>
 
               <div className="flex items-center gap-3">
-                {project.githubUrl && (
+                {project.githubUrl ? (
                   <a
                     href={project.githubUrl}
                     target="_blank"
@@ -87,10 +82,10 @@ export function Projects() {
                     className="text-muted-foreground transition-colors hover:text-accent"
                     aria-label={`${project.title} GitHub`}
                   >
-                    <Github size={18} />
+                    <GithubIcon size={18} />
                   </a>
-                )}
-                {project.liveUrl && (
+                ) : null}
+                {project.liveUrl ? (
                   <a
                     href={project.liveUrl}
                     target="_blank"
@@ -100,7 +95,7 @@ export function Projects() {
                   >
                     <ExternalLink size={18} />
                   </a>
-                )}
+                ) : null}
               </div>
             </div>
 

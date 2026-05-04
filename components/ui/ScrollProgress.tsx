@@ -1,5 +1,8 @@
 "use client";
 
+// Thin horizontal accent bar pinned to the top of the viewport that
+// scales 0→1 as the page scrolls.
+
 import { motion, useScroll, useSpring } from "framer-motion";
 
 export function ScrollProgress() {
