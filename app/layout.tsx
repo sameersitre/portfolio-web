@@ -1,5 +1,6 @@
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 import { Footer } from "@/components/layout/Footer";
+import { GoogleAnalyticsLoader } from "@/components/layout/GoogleAnalyticsLoader";
 import { Header } from "@/components/layout/Header";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -123,6 +124,7 @@ export default function RootLayout({
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
+        <GoogleAnalyticsLoader />
       </body>
     </html>
   );

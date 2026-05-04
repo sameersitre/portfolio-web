@@ -8,6 +8,7 @@ import { ExternalLink, Folder } from "lucide-react";
 import { GithubIcon } from "@/components/ui/BrandIcons";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { trackProject, trackProjectFilter } from "@/lib/analytics/events";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 import type { Project } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,10 @@ export function Projects({ projects }: Props) {
         {filters.map((filter) => (
           <button
             key={filter}
-            onClick={() => setActiveFilter(filter)}
+            onClick={() => {
+              setActiveFilter(filter);
+              trackProjectFilter(filter);
+            }}
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-all",
               activeFilter === filter
@@ -60,7 +64,10 @@ export function Projects({ projects }: Props) {
         animate="show"
         className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {filteredProjects.map((project) => (
+        {filteredProjects.map((project) => {
+          const githubUrl = project.githubUrl;
+          const liveUrl = project.liveUrl;
+          return (
           <motion.div
             key={project.title}
             variants={cardItem}
@@ -74,22 +81,28 @@ export function Projects({ projects }: Props) {
               </div>
 
               <div className="flex items-center gap-3">
-                {project.githubUrl ? (
+                {githubUrl ? (
                   <a
-                    href={project.githubUrl}
+                    href={githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackProject(project.title, "source", githubUrl)
+                    }
                     className="text-muted-foreground transition-colors hover:text-accent"
                     aria-label={`${project.title} GitHub`}
                   >
                     <GithubIcon size={18} />
                   </a>
                 ) : null}
-                {project.liveUrl ? (
+                {liveUrl ? (
                   <a
-                    href={project.liveUrl}
+                    href={liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackProject(project.title, "demo", liveUrl)
+                    }
                     className="text-muted-foreground transition-colors hover:text-accent"
                     aria-label={`${project.title} live demo`}
                   >
@@ -128,7 +141,8 @@ export function Projects({ projects }: Props) {
               </span>
             </div>
           </motion.div>
-        ))}
+          );
+        })}
       </motion.div>
     </Section>
   );

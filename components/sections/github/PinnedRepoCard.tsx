@@ -5,6 +5,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, GitFork, Star } from "lucide-react";
 import { GithubIcon } from "@/components/ui/BrandIcons";
+import { trackPinnedRepo } from "@/lib/analytics/events";
 import { fadeUp } from "@/lib/animations";
 import type { PinnedRepo } from "@/lib/github";
 
@@ -17,6 +18,7 @@ export function PinnedRepoCard({ repo }: { repo: PinnedRepo }) {
       href={repo.url}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackPinnedRepo(repo.name, repo.url)}
       className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
     >
       <div className="flex items-start justify-between">

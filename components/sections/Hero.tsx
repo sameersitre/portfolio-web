@@ -7,6 +7,7 @@
 import { useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import { trackCta } from "@/lib/analytics/events";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 
 const SPOTLIGHT_RADIUS_PX = 600;
@@ -87,12 +88,14 @@ export function Hero() {
         <motion.div variants={item} className="mt-10 flex gap-4">
           <a
             href="#contact"
+            onClick={() => trackCta("hero_primary", "contact")}
             className="rounded-full border border-accent bg-accent/10 px-6 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
           >
             Get in Touch
           </a>
           <a
             href="#projects"
+            onClick={() => trackCta("hero_secondary", "projects")}
             className="rounded-full border border-border px-6 py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent"
           >
             See My Work
@@ -113,6 +116,7 @@ export function Hero() {
         >
           <a
             href="#about"
+            onClick={() => trackCta("hero_scroll", "about")}
             className="text-muted-foreground/40 transition-colors hover:text-accent"
             aria-label="Scroll to about section"
           >

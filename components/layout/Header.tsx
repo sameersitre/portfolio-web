@@ -6,6 +6,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import {
+  trackNav,
+  trackOutbound,
+  trackResumeView,
+  type NavSection,
+  type NavSurface,
+} from "@/lib/analytics/events";
 import { navItems, siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { GithubIcon } from "@/components/ui/BrandIcons";
@@ -58,10 +65,17 @@ export function Header() {
     return () => observer.disconnect();
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (href: string, surface: NavSurface) => {
     setIsMobileMenuOpen(false);
+    trackNav(href.replace("#", "") as NavSection, surface);
     const el = document.querySelector(href);
     el?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    trackNav("home", "desktop");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -76,10 +90,7 @@ export function Header() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a
           href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
+          onClick={handleLogoClick}
           className="text-lg font-bold tracking-tight text-foreground"
         >
           {siteConfig.name.split(" ")[0]}
@@ -91,7 +102,7 @@ export function Header() {
           {navItems.map((item) => (
             <li key={item.href}>
               <button
-                onClick={() => handleNavClick(item.href)}
+                onClick={() => handleNavClick(item.href, "desktop")}
                 className={cn(
                   "text-sm transition-colors hover:text-accent",
                   activeSection === item.href.replace("#", "")
@@ -111,6 +122,9 @@ export function Header() {
             href={siteConfig.links.sourceRepo}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackOutbound(siteConfig.links.sourceRepo, "source_repo_header")
+            }
             className="text-muted-foreground transition-colors hover:text-accent"
             aria-label="View source on GitHub"
           >
@@ -120,6 +134,7 @@ export function Header() {
             href={siteConfig.links.resume}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackResumeView("desktop")}
             className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
           >
             Resume
@@ -133,6 +148,7 @@ export function Header() {
             href={siteConfig.links.resume}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackResumeView("mobile")}
             className="inline-flex items-center rounded-full border border-accent bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
           >
             Resume
@@ -160,7 +176,7 @@ export function Header() {
               {navItems.map((item) => (
                 <li key={item.href}>
                   <button
-                    onClick={() => handleNavClick(item.href)}
+                    onClick={() => handleNavClick(item.href, "mobile")}
                     className={cn(
                       "w-full rounded-lg px-4 py-3 text-left text-sm transition-colors hover:bg-muted",
                       activeSection === item.href.replace("#", "")
@@ -177,6 +193,12 @@ export function Header() {
                   href={siteConfig.links.sourceRepo}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    trackOutbound(
+                      siteConfig.links.sourceRepo,
+                      "source_repo_header_mobile",
+                    )
+                  }
                   className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent"
                   aria-label="View source on GitHub"
                 >

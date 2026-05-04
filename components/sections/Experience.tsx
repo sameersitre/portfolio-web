@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Briefcase, MapPin, ChevronDown } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { trackExperienceExpand } from "@/lib/analytics/events";
 import { EASE_OUT } from "@/lib/animations";
 import type { Experience as ExperienceType } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
@@ -64,7 +65,13 @@ export function Experience({ experiences }: Props) {
                 >
                   {/* Header — always visible */}
                   <button
-                    onClick={() => setExpandedIndex(isExpanded ? -1 : index)}
+                    onClick={() => {
+                      const willExpand = !isExpanded;
+                      setExpandedIndex(willExpand ? index : -1);
+                      if (willExpand) {
+                        trackExperienceExpand(exp.company, exp.role);
+                      }
+                    }}
                     className="flex w-full items-start justify-between p-6 text-left"
                   >
                     <div className="flex-1">

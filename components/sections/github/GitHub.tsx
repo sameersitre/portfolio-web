@@ -12,6 +12,10 @@ import { ContributionGrid } from "@/components/sections/github/ContributionGrid"
 import { PinnedRepoCard } from "@/components/sections/github/PinnedRepoCard";
 import { StatCards } from "@/components/sections/github/StatCards";
 import { YearTabs } from "@/components/sections/github/YearTabs";
+import {
+  trackGithubProfileView,
+  trackYearFilter,
+} from "@/lib/analytics/events";
 import { EASE_OUT, staggerContainer } from "@/lib/animations";
 import type { GitHubData } from "@/lib/github";
 import { siteConfig } from "@/lib/site-config";
@@ -40,7 +44,10 @@ export function GitHub({ data }: { data: GitHubData }) {
         <YearTabs
           availableYears={availableYears}
           selectedYear={selectedYear}
-          onSelectYear={setSelectedYear}
+          onSelectYear={(year) => {
+            setSelectedYear(year);
+            trackYearFilter(year);
+          }}
           total={yearData.total}
         />
         <ContributionGrid weeks={yearData.weeks} />
@@ -65,6 +72,7 @@ export function GitHub({ data }: { data: GitHubData }) {
           href={siteConfig.links.github}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackGithubProfileView()}
           className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent"
         >
           <GithubIcon size={16} />
