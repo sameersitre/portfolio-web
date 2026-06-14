@@ -3,7 +3,7 @@
 // Site header: brand, primary nav (with scroll-spy active section), theme toggle,
 // resume link, and mobile menu drawer.
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import {
   type NavSection,
   type NavSurface,
 } from "@/lib/analytics/events";
-import { navItems, siteConfig } from "@/lib/data";
+import { navItems, siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { GithubIcon } from "@/components/ui/BrandIcons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -43,13 +43,19 @@ export function Header() {
   // narrow band starting at ACTIVE_SECTION_OFFSET_PX from the top; whichever
   // section's top crosses into that band becomes active.
   useEffect(() => {
+    const sectionIds = navItems.map((item) => item.href.replace("#", ""));
+    const visible = new Set<string>();
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
         });
+        // Pick the first section in document order that is currently in the band,
+        // so simultaneous entries don't let the last-fired callback win.
+        const topmost = sectionIds.find((id) => visible.has(id));
+        if (topmost) setActiveSection(topmost);
       },
       {
         rootMargin: `-${ACTIVE_SECTION_OFFSET_PX}px 0px -60% 0px`,
@@ -57,8 +63,8 @@ export function Header() {
       },
     );
 
-    navItems.forEach((item) => {
-      const el = document.getElementById(item.href.replace("#", ""));
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
 
