@@ -19,6 +19,11 @@ RUN --mount=type=cache,target=/root/.npm \
 FROM base AS builder
 WORKDIR /app
 
+# NEXT_PUBLIC_* env vars must be present *during* `next build` because Next.js
+# inlines them into the client bundle. Pass them in via --build-arg.
+ARG NEXT_PUBLIC_GA_ID
+ENV NEXT_PUBLIC_GA_ID=${NEXT_PUBLIC_GA_ID}
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

@@ -1,12 +1,13 @@
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 import { Footer } from "@/components/layout/Footer";
-import { GoogleAnalyticsLoader } from "@/components/layout/GoogleAnalyticsLoader";
 import { Header } from "@/components/layout/Header";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SkipToContent } from "@/components/ui/SkipToContent";
+import { ANALYTICS_ENABLED, GA_ID } from "@/lib/analytics/config";
 import { homepageJsonLd } from "@/lib/seo/jsonLd";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
@@ -124,7 +125,7 @@ export default function RootLayout({
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
-        <GoogleAnalyticsLoader />
+        {ANALYTICS_ENABLED && GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
       </body>
     </html>
   );
