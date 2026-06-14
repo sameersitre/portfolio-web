@@ -98,23 +98,37 @@ export function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
           {/* Contribution cells */}
           {weeks.map((week, wi) => (
             <div key={wi} className="flex flex-col gap-0.75">
-              {week.days.map((day) => (
-                <div
-                  key={day.date}
-                  className="relative"
-                  onMouseEnter={() => setHoveredDay(day.date)}
-                  onMouseLeave={() => setHoveredDay(null)}
-                >
+              {week.days.map((day) => {
+                // Filler cells (out-of-range alignment days) render dimly with
+                // no hover handler and no tooltip — they aren't real data.
+                if (!day.inRange) {
+                  return (
+                    <div
+                      key={day.date}
+                      className="h-2.5 w-2.5 rounded-xs opacity-40"
+                    />
+                  );
+                }
+                return (
                   <div
-                    className={cn(
-                      "h-2.5 w-2.5 rounded-xs transition-all",
-                      levelColors[day.level],
-                      hoveredDay === day.date && "ring-1 ring-accent",
+                    key={day.date}
+                    className="relative"
+                    onMouseEnter={() => setHoveredDay(day.date)}
+                    onMouseLeave={() => setHoveredDay(null)}
+                  >
+                    <div
+                      className={cn(
+                        "h-2.5 w-2.5 rounded-xs transition-all",
+                        levelColors[day.level],
+                        hoveredDay === day.date && "ring-1 ring-accent",
+                      )}
+                    />
+                    {hoveredDay === day.date && (
+                      <ContributionTooltip day={day} />
                     )}
-                  />
-                  {hoveredDay === day.date && <ContributionTooltip day={day} />}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>

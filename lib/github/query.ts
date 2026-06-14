@@ -130,6 +130,9 @@ export async function fetchGitHubGraphQL(): Promise<GitHubData> {
         date: day.date,
         count: day.contributionCount,
         level: mapContributionLevel(day.contributionLevel),
+        // GitHub's GraphQL calendar only returns days inside the requested
+        // window, so every day from the API is in-range.
+        inRange: true,
       })),
     }));
 

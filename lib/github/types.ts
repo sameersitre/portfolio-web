@@ -7,6 +7,10 @@ export interface ContributionDay {
   date: string;
   count: number;
   level: 0 | 1 | 2 | 3 | 4;
+  // True for cells that fall inside the requested year. False for week-alignment
+  // filler cells (days before Jan 1 or after the year's end / today). Renderers
+  // can use this to suppress hover/tooltip on out-of-range cells.
+  inRange: boolean;
 }
 
 export interface ContributionWeek {

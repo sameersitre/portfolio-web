@@ -45,6 +45,7 @@ function generateMockYear(year: number): YearContribution {
           date: date.toISOString().split("T")[0],
           count: 0,
           level: 0,
+          inRange: false,
         });
         continue;
       }
@@ -65,7 +66,12 @@ function generateMockYear(year: number): YearContribution {
       if (count > 6) level = 3;
       if (count > 9) level = 4;
 
-      days.push({ date: date.toISOString().split("T")[0], count, level });
+      days.push({
+        date: date.toISOString().split("T")[0],
+        count,
+        level,
+        inRange: true,
+      });
       total += count;
     }
     weeks.push({ days });
