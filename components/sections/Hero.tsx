@@ -4,7 +4,7 @@
 // The spotlight is updated via direct DOM mutation (ref + style) so mouse
 // movement does not trigger React re-renders of the staggered headline.
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { trackCta } from "@/lib/analytics/events";
@@ -17,14 +17,30 @@ const item = fadeUp(0.6, 30);
 
 export function Hero() {
   const spotlightRef = useRef<HTMLDivElement>(null);
+  // Latest pointer position; written on every mousemove, read once per rAF.
+  const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const spotlight = spotlightRef.current;
-    if (!spotlight) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    spotlight.style.background = `radial-gradient(${SPOTLIGHT_RADIUS_PX}px circle at ${x}px ${y}px, rgba(245, 158, 11, 0.1), transparent 90%)`;
+    pointerRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const spotlight = spotlightRef.current;
+      const pos = pointerRef.current;
+      if (!spotlight || !pos) return;
+      spotlight.style.background = `radial-gradient(${SPOTLIGHT_RADIUS_PX}px circle at ${pos.x}px ${pos.y}px, rgba(245, 158, 11, 0.1), transparent 90%)`;
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   return (
