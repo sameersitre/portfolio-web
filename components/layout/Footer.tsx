@@ -1,6 +1,6 @@
 // Site footer: tech stack credit, copyright, and build version.
 
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

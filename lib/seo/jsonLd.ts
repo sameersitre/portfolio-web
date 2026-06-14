@@ -1,7 +1,7 @@
 // Structured data (schema.org) for the homepage.
 // Rendered as a single <script type="application/ld+json"> from app/layout.tsx.
 
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 
 const PROFILE_ID = `${siteConfig.url}/#profilepage`;
 const PERSON_ID = `${siteConfig.url}/#person`;

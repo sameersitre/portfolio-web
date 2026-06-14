@@ -9,7 +9,7 @@ import {
   type ContactMethod,
 } from "@/lib/analytics/events";
 import { fadeUp, staggerContainer } from "@/lib/animations";
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
