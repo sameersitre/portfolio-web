@@ -1,42 +1,87 @@
 "use client";
 
-import { useState, useEffect } from "react";
+// Site header: brand, primary nav (with scroll-spy active section), theme toggle,
+// resume link, and mobile menu drawer.
+
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileDown, Github } from "lucide-react";
-import { navItems, siteConfig } from "@/lib/data";
+import { Menu, X } from "lucide-react";
+import {
+  trackNav,
+  trackOutbound,
+  trackResumeView,
+  type NavSection,
+  type NavSurface,
+} from "@/lib/analytics/events";
+import { navItems, siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
+// Pixels of vertical scroll before the header switches to the blurred state.
+const SCROLL_THRESHOLD_PX = 50;
+// A section is considered "active" once its top is within this many pixels of the viewport top.
+const ACTIVE_SECTION_OFFSET_PX = 120;
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
+  // Toggle the blurred header background once the user has scrolled past the threshold.
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-
-      const sections = navItems.map((item) => item.href.replace("#", ""));
-      for (const section of sections.reverse()) {
-        const el = document.getElementById(section);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 120) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
+      setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  // Track the active section via IntersectionObserver instead of reading
+  // getBoundingClientRect() on every scroll frame. The rootMargin defines a
+  // narrow band starting at ACTIVE_SECTION_OFFSET_PX from the top; whichever
+  // section's top crosses into that band becomes active.
+  useEffect(() => {
+    const sectionIds = navItems.map((item) => item.href.replace("#", ""));
+    const visible = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        });
+        // Pick the first section in document order that is currently in the band,
+        // so simultaneous entries don't let the last-fired callback win.
+        const topmost = sectionIds.find((id) => visible.has(id));
+        if (topmost) setActiveSection(topmost);
+      },
+      {
+        rootMargin: `-${ACTIVE_SECTION_OFFSET_PX}px 0px -60% 0px`,
+        threshold: 0,
+      },
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleNavClick = (href: string, surface: NavSurface) => {
     setIsMobileMenuOpen(false);
+    trackNav(href.replace("#", "") as NavSection, surface);
     const el = document.querySelector(href);
     el?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    trackNav("home", "desktop");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -51,10 +96,7 @@ export function Header() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a
           href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
+          onClick={handleLogoClick}
           className="text-lg font-bold tracking-tight text-foreground"
         >
           {siteConfig.name.split(" ")[0]}
@@ -66,7 +108,7 @@ export function Header() {
           {navItems.map((item) => (
             <li key={item.href}>
               <button
-                onClick={() => handleNavClick(item.href)}
+                onClick={() => handleNavClick(item.href, "desktop")}
                 className={cn(
                   "text-sm transition-colors hover:text-accent",
                   activeSection === item.href.replace("#", "")
@@ -83,18 +125,22 @@ export function Header() {
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
           <a
-            href="https://github.com/sameersitre/portfolio-web"
+            href={siteConfig.links.sourceRepo}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackOutbound(siteConfig.links.sourceRepo, "source_repo_header")
+            }
             className="text-muted-foreground transition-colors hover:text-accent"
             aria-label="View source on GitHub"
           >
-            <Github size={20} />
+            <GithubIcon size={20} />
           </a>
           <a
-            href="https://drive.google.com/file/d/1wrCdThQQUx355icNMoc45dA-qPRcJ_B0/view?usp=drive_link"
+            href={siteConfig.links.resume}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackResumeView("desktop")}
             className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
           >
             Resume
@@ -104,6 +150,15 @@ export function Header() {
         {/* Mobile Menu Toggle */}
         <div className="flex items-center gap-3 md:hidden">
           <ThemeToggle />
+          <a
+            href={siteConfig.links.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackResumeView("mobile")}
+            className="inline-flex items-center rounded-full border border-accent bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+          >
+            Resume
+          </a>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-foreground"
@@ -127,7 +182,7 @@ export function Header() {
               {navItems.map((item) => (
                 <li key={item.href}>
                   <button
-                    onClick={() => handleNavClick(item.href)}
+                    onClick={() => handleNavClick(item.href, "mobile")}
                     className={cn(
                       "w-full rounded-lg px-4 py-3 text-left text-sm transition-colors hover:bg-muted",
                       activeSection === item.href.replace("#", "")
@@ -141,23 +196,20 @@ export function Header() {
               ))}
               <li className="mt-2 flex items-center gap-3">
                 <a
-                  href="https://github.com/sameersitre/portfolio-web"
+                  href={siteConfig.links.sourceRepo}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    trackOutbound(
+                      siteConfig.links.sourceRepo,
+                      "source_repo_header_mobile",
+                    )
+                  }
                   className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent"
                   aria-label="View source on GitHub"
                 >
-                  <Github size={16} />
+                  <GithubIcon size={16} />
                   Source
-                </a>
-                <a
-                  href="/Sameer_Sitre_CV_2026.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent"
-                >
-                  <FileDown size={16} />
-                  Resume
                 </a>
               </li>
             </ul>

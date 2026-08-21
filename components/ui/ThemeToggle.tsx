@@ -1,8 +1,12 @@
 "use client";
 
+// Sun/Moon button toggling next-themes between dark and light.
+// Renders a placeholder until mounted to avoid hydration mismatch.
+
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
+import { trackThemeToggle } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
@@ -17,9 +21,15 @@ export function ThemeToggle() {
     return <div className="h-9 w-9" />;
   }
 
+  const handleToggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    trackThemeToggle(next);
+    setTheme(next);
+  };
+
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={handleToggle}
       className={cn(
         "rounded-full p-2 transition-colors",
         "text-muted-foreground hover:bg-muted hover:text-foreground",

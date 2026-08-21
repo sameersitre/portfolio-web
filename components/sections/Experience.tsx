@@ -1,14 +1,22 @@
 "use client";
 
+// Experience section: vertical timeline of roles, expandable accordion per company.
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Briefcase, MapPin, ChevronDown } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { experiences } from "@/lib/data";
+import { trackExperienceExpand } from "@/lib/analytics/events";
+import { EASE_OUT } from "@/lib/animations";
+import type { Experience as ExperienceType } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 
-export function Experience() {
+interface Props {
+  experiences: ExperienceType[];
+}
+
+export function Experience({ experiences }: Props) {
   const [expandedIndex, setExpandedIndex] = useState(0);
 
   return (
@@ -32,7 +40,7 @@ export function Experience() {
                 transition={{
                   duration: 0.5,
                   delay: index * 0.1,
-                  ease: "easeOut" as const,
+                  ease: EASE_OUT,
                 }}
                 className="relative md:pl-20"
               >
@@ -57,7 +65,13 @@ export function Experience() {
                 >
                   {/* Header — always visible */}
                   <button
-                    onClick={() => setExpandedIndex(isExpanded ? -1 : index)}
+                    onClick={() => {
+                      const willExpand = !isExpanded;
+                      setExpandedIndex(willExpand ? index : -1);
+                      if (willExpand) {
+                        trackExperienceExpand(exp.company, exp.role);
+                      }
+                    }}
                     className="flex w-full items-start justify-between p-6 text-left"
                   >
                     <div className="flex-1">
@@ -120,7 +134,7 @@ export function Experience() {
                                     transition={{
                                       duration: 0.3,
                                       delay: i * 0.05,
-                                      ease: "easeOut" as const,
+                                      ease: EASE_OUT,
                                     }}
                                     className="flex gap-3 text-sm text-muted-foreground"
                                   >

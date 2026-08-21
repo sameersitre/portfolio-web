@@ -1,5 +1,7 @@
 "use client";
 
+// Animated H2 + optional subtitle used at the top of every section.
+
 import { motion } from "framer-motion";
 
 interface SectionHeadingProps {
@@ -20,7 +22,7 @@ export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
         {title}
         <span className="text-accent">.</span>
       </motion.h2>
-      {subtitle && (
+      {subtitle ? (
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -30,7 +32,7 @@ export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
         >
           {subtitle}
         </motion.p>
-      )}
+      ) : null}
     </div>
   );
 }

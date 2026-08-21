@@ -1,0 +1,19 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+.env*
+.vscode
+
+# Local artifacts
+.DS_Store
+*.log
+coverage
+dist
+build
+tmp
+
+# Don't ship the build context's Docker config back into the image
+Dockerfile
+.dockerignore

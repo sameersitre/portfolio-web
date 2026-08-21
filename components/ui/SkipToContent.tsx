@@ -1,3 +1,4 @@
+// Keyboard-only "skip to main content" link (a11y).
 export function SkipToContent() {
   return (
     <a

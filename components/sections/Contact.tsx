@@ -1,87 +1,74 @@
 "use client";
 
+// Contact section: short blurb, contact details, and social links row.
+
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { siteConfig } from "@/lib/data";
+import {
+  trackContact,
+  type ContactMethod,
+} from "@/lib/analytics/events";
+import { fadeUp, staggerContainer } from "@/lib/animations";
+import { siteConfig } from "@/lib/site-config";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 
-const socialLinks = [
+const socialLinks: {
+  label: string;
+  href: string;
+  icon: React.ReactNode;
+  method: ContactMethod;
+}[] = [
   {
     label: "GitHub",
     href: siteConfig.links.github,
-    icon: <Github size={20} />,
+    icon: <GithubIcon size={20} />,
+    method: "github",
   },
   {
     label: "LinkedIn",
     href: siteConfig.links.linkedin,
-    icon: <Linkedin size={20} />,
+    icon: <LinkedinIcon size={20} />,
+    method: "linkedin",
   },
   {
     label: "Email",
     href: `mailto:${siteConfig.email}`,
     icon: <Mail size={20} />,
+    method: "email",
   },
 ];
 
-const contactInfo = [
+type ContactRow =
+  | {
+      icon: React.ReactNode;
+      label: string;
+      href: string;
+      method: ContactMethod;
+    }
+  | { icon: React.ReactNode; label: string; href?: undefined };
+
+const contactInfo: ContactRow[] = [
   {
     icon: <Mail size={16} />,
     label: siteConfig.email,
     href: `mailto:${siteConfig.email}`,
+    method: "email",
   },
   {
     icon: <Phone size={16} />,
     label: siteConfig.phone,
     href: `tel:${siteConfig.phone.replace(/\s/g, "")}`,
+    method: "phone",
   },
-  { icon: <MapPin size={16} />, label: siteConfig.location, href: undefined },
+  { icon: <MapPin size={16} />, label: siteConfig.location },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  },
-};
+const container = staggerContainer(0.1);
+const item = fadeUp();
 
 export function Contact() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sending");
-
-    // TODO: Replace with actual form submission (Resend, Formspree, or Server Action)
-    // Simulating submission for now
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setStatus("sent");
-    setFormState({ name: "", email: "", message: "" });
-
-    setTimeout(() => setStatus("idle"), 4000);
-  };
-
-  const isValid =
-    formState.name.trim() && formState.email.trim() && formState.message.trim();
-
   return (
     <Section id="contact">
       <SectionHeading title="Get In Touch" subtitle="Let's work together" />
@@ -105,16 +92,27 @@ export function Contact() {
         <div className="flex flex-row items-end w-full gap-12 md:flex-row justify-between">
           <motion.div variants={item} className="space-y-3">
             {contactInfo.map((info) => {
-              const Wrapper = info.href ? "a" : "span";
+              if (info.href) {
+                return (
+                  <a
+                    key={info.label}
+                    href={info.href}
+                    onClick={() => trackContact(info.method, info.href)}
+                    className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-accent"
+                  >
+                    <span className="text-accent">{info.icon}</span>
+                    {info.label}
+                  </a>
+                );
+              }
               return (
-                <Wrapper
+                <span
                   key={info.label}
-                  {...(info.href ? { href: info.href } : {})}
-                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-accent"
+                  className="flex items-center gap-3 text-sm text-muted-foreground"
                 >
                   <span className="text-accent">{info.icon}</span>
                   {info.label}
-                </Wrapper>
+                </span>
               );
             })}
           </motion.div>
@@ -126,6 +124,7 @@ export function Contact() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackContact(link.method, link.href)}
                 className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-muted-foreground transition-all hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
                 aria-label={link.label}
               >

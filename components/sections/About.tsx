@@ -1,8 +1,11 @@
 "use client";
 
+// About section: bio paragraphs, profile placeholder, and animated stats grid.
+
 import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { fadeUp, staggerContainer } from "@/lib/animations";
 
 const stats = [
   { value: "7+", label: "Years Experience" },
@@ -11,22 +14,8 @@ const stats = [
   { value: "1000s", label: "Users Served" },
 ];
 
-const statsContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-  },
-};
-
-const statItem = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" as const },
-  },
-};
+const statsContainer = staggerContainer(0.1, 0.2);
+const statItem = fadeUp(0.5);
 
 export function About() {
   return (

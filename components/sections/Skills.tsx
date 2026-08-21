@@ -1,5 +1,7 @@
 "use client";
 
+// Skills section: grid of category cards each listing a set of skill chips.
+
 import { motion } from "framer-motion";
 import {
   Code2,
@@ -13,7 +15,12 @@ import {
 } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { skillCategories } from "@/lib/data";
+import { fadeUp, staggerContainer } from "@/lib/animations";
+import type { SkillCategory } from "@/lib/portfolio";
+
+interface Props {
+  skillCategories: SkillCategory[];
+}
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Languages: <Code2 size={20} />,
@@ -26,24 +33,10 @@ const categoryIcons: Record<string, React.ReactNode> = {
   DevOps: <GitBranch size={20} />,
 };
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
+const container = staggerContainer(0.08);
+const cardItem = fadeUp();
 
-const cardItem = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  },
-};
-
-export function Skills() {
+export function Skills({ skillCategories }: Props) {
   return (
     <Section id="skills">
       <SectionHeading title="Skills" subtitle="Technologies I work with" />

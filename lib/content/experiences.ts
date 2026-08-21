@@ -1,26 +1,5 @@
-export const siteConfig = {
-  name: "Sameer Sitre",
-  title: "Software Engineer",
-  description:
-    "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
-  url: "https://sameersitre.dev",
-  email: "sameersitre@gmail.com",
-  phone: "+91 7030552747",
-  location: "Amravati, Maharashtra, India",
-  links: {
-    github: "https://github.com/sameersitre",
-    linkedin: "https://www.linkedin.com/in/sameersitre",
-  },
-};
-
-export const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "GitHub", href: "#github" },
-  { label: "Contact", href: "#contact" },
-];
+// Work history shown in the Experience section.
+// Static fallback when the portfolio backend is unreachable.
 
 export const experiences = [
   {
@@ -96,87 +75,5 @@ export const experiences = [
         ],
       },
     ],
-  },
-];
-
-export const skillCategories = [
-  {
-    title: "Languages",
-    skills: ["TypeScript", "JavaScript", "HTML5", "CSS3"],
-  },
-  {
-    title: "Frameworks",
-    skills: ["React", "Next.js", "React Native", "Redux Toolkit", "React Query", "Zustand"],
-  },
-  {
-    title: "UI & Styling",
-    skills: ["Tailwind CSS", "Mantine"],
-  },
-  {
-    title: "Testing",
-    skills: ["Playwright", "Jest", "Vitest", "Cypress", "Storybook"],
-  },
-  {
-    title: "Monitoring",
-    skills: ["Datadog RUM", "Bugsnag"],
-  },
-  {
-    title: "Integrations",
-    skills: ["Stripe", "Google Maps", "Firebase", "LiveKit", "GraphQL", "REST", "OpenAPI"],
-  },
-  {
-    title: "AI",
-    skills: ["Claude Code", "Claude Agents", "Claude Skills", "Prompt Engineering"],
-  },
-  {
-    title: "DevOps",
-    skills: ["CI/CD", "TeamCity", "Git", "GitHub Actions"],
-  },
-];
-
-export const projects = [
-  {
-    title: "Bingefeast",
-    description:
-      "PWA for discovering movies/TV shows across streaming platforms with filters, trailers, and cast info.",
-    tech: ["React", "Redux", "Material-UI", "Framer Motion", "Node.js", "Express", "MongoDB", "AWS EC2"],
-    liveUrl: "https://sameersitre.dev",
-    githubUrl: "https://github.com/sameersitre",
-    category: "Web",
-  },
-  {
-    title: "Bingee",
-    description: "React Native mobile version of Bingefeast with native animations and smooth UX.",
-    tech: ["React Native", "Redux", "React Native Paper", "Lottie"],
-    liveUrl: "",
-    githubUrl: "https://github.com/sameersitre",
-    category: "Mobile",
-  },
-  {
-    title: "biryanis.com",
-    description:
-      "Global food ordering platform supporting multi-channel ordering, table reservations, and comprehensive loyalty program.",
-    tech: ["React", "React Native", "Node.js", "Web + Mobile"],
-    liveUrl: "",
-    githubUrl: "",
-    category: "Web",
-  },
-  {
-    title: "Gifting SDK",
-    description:
-      "Reusable npm package for loyalty program gifting functionality, deployed across multiple production applications.",
-    tech: ["React", "npm", "TypeScript"],
-    liveUrl: "",
-    githubUrl: "",
-    category: "Library",
-  },
-  {
-    title: "Mosymphony",
-    description:
-      "B2B pharmaceutical supply chain mobile app enabling real-time production tracking and delivery monitoring.",
-    tech: ["React Native", "Redux", "WebSockets"],
-    liveUrl: "",
-    githubUrl: "",
-    category: "Mobile",
   },
 ];
