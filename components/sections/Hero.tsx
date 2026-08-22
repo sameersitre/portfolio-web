@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { trackCta } from "@/lib/analytics/events";
 import { fadeUp, staggerContainer } from "@/lib/animations";
+import { siteConfig } from "@/lib/site-config";
 
 const SPOTLIGHT_RADIUS_PX = 600;
 
@@ -83,7 +84,8 @@ export function Hero() {
           variants={item}
           className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl"
         >
-          Sameer Sitre<span className="text-accent">.</span>
+          {siteConfig.name}
+          <span className="text-accent">.</span>
         </motion.h1>
 
         <motion.h2

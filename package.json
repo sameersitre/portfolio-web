@@ -1,13 +1,15 @@
 {
   "name": "portfolio-web",
-  "version": "1.0.4",
+  "version": "1.2.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write './**/*.{cjs,mjs,js,jsx,ts,tsx,css,md,json,graphql}' --config ./.prettierrc.json"
+    "format": "prettier --write './**/*.{cjs,mjs,js,jsx,ts,tsx,css,md,json,graphql}' --config ./.prettierrc.json",
+    "seed:portfolio": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-portfolio.mts",
+    "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.4",

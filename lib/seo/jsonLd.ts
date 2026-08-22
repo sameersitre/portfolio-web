@@ -1,7 +1,7 @@
 // Structured data (schema.org) for the homepage.
 // Rendered as a single <script type="application/ld+json"> from app/layout.tsx.
 
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig, siteTitle } from "@/lib/site-config";
 
 const PROFILE_ID = `${siteConfig.url}/#profilepage`;
 const PERSON_ID = `${siteConfig.url}/#person`;
@@ -12,9 +12,8 @@ export const homepageJsonLd = [
     "@context": "https://schema.org",
     "@type": "ProfilePage",
     "@id": PROFILE_ID,
-    name: "Sameer Sitre — Software Engineer",
-    description:
-      "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
+    name: siteTitle,
+    description: siteConfig.description,
     url: siteConfig.url,
     mainEntity: {
       "@type": "Person",

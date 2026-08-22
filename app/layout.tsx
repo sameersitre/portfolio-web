@@ -7,6 +7,7 @@ import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SkipToContent } from "@/components/ui/SkipToContent";
 import { ANALYTICS_ENABLED, GA_ID } from "@/lib/analytics/config";
 import { homepageJsonLd } from "@/lib/seo/jsonLd";
+import { siteConfig, siteTitle } from "@/lib/site-config";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -34,11 +35,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sameer Sitre — Software Engineer",
+  title: siteTitle,
   description:
     "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications. React, Next.js, React Native, TypeScript.",
   keywords: [
-    "Sameer Sitre",
+    siteConfig.name,
     "Frontend Engineer",
     "Software Engineer",
     "React",
@@ -47,11 +48,11 @@ export const metadata: Metadata = {
     "TypeScript",
     "Portfolio",
   ],
-  authors: [{ name: "Sameer Sitre" }],
-  creator: "Sameer Sitre",
-  metadataBase: new URL("https://sameersitre.dev"),
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  metadataBase: new URL(siteConfig.url),
   alternates: {
-    canonical: "https://sameersitre.dev",
+    canonical: siteConfig.url,
   },
   robots: {
     index: true,
@@ -61,11 +62,10 @@ export const metadata: Metadata = {
     "max-video-preview": -1,
   },
   openGraph: {
-    title: "Sameer Sitre — Software Engineer",
-    description:
-      "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
-    url: "https://sameersitre.dev",
-    siteName: "Sameer Sitre",
+    title: siteTitle,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
     locale: "en_US",
     type: "website",
     images: [
@@ -73,15 +73,14 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Sameer Sitre — Software Engineer Portfolio",
+        alt: `${siteTitle} Portfolio`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sameer Sitre — Software Engineer",
-    description:
-      "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
+    title: siteTitle,
+    description: siteConfig.description,
     images: ["/opengraph-image"],
   },
 };

@@ -24,6 +24,17 @@ WORKDIR /app
 ARG NEXT_PUBLIC_GA_ID
 ENV NEXT_PUBLIC_GA_ID=${NEXT_PUBLIC_GA_ID}
 
+# The site has NO static fallback — content comes only from the portfolio API — so `next build`
+# must be able to REACH that API to prerender `/`, or the export fails by design. Compose injects
+# BACKEND_INTERNAL_URL (http://backend:8000) at RUNTIME only, and that host does not resolve from
+# a build container, so the build is given the PUBLIC base URL instead.
+#
+# Scoped to this stage on purpose: the `runner` stage below is a separate FROM and does NOT
+# inherit it, so at runtime the value still comes from compose (the fast in-network URL) and
+# ISR revalidation keeps using that — the public URL is only ever a build-time input.
+ARG BACKEND_INTERNAL_URL
+ENV BACKEND_INTERNAL_URL=${BACKEND_INTERNAL_URL}
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

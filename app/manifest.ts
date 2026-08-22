@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 
+import { siteConfig, siteTitle } from "@/lib/site-config";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Sameer Sitre — Software Engineer",
-    short_name: "Sameer Sitre",
-    description:
-      "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
+    name: siteTitle,
+    short_name: siteConfig.name,
+    description: siteConfig.description,
     start_url: "/",
     display: "standalone",
     background_color: "#0a0a0a",

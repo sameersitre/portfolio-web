@@ -1,5 +1,8 @@
 // Work history shown in the Experience section.
-// Static fallback when the portfolio backend is unreachable.
+// SEED SOURCE ONLY — not imported at runtime. `npm run seed:portfolio` POSTs this to
+// the backend, which is the site's single source of content (see lib/portfolio.ts).
+
+import type { Experience } from "@/lib/portfolio";
 
 export const experiences = [
   {
@@ -76,4 +79,4 @@ export const experiences = [
       },
     ],
   },
-];
+] satisfies Experience[];

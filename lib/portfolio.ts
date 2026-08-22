@@ -1,18 +1,56 @@
-// Server-side portfolio data fetcher with static fallback.
-// Tries the backend's /api/v2/portfolio/content; on failure or empty response,
-// returns the bundled static content.
+// Server-side portfolio data fetcher. The backend is the ONLY source of content —
+// there is deliberately no static fallback, so a misconfigured or failing backend
+// surfaces as an error instead of silently serving stale bundled copy.
+//
+// `lib/content/*` still exists, but purely as the SEED SOURCE for
+// `scripts/seed-portfolio.ts` (`npm run seed:portfolio`) — it is not imported at
+// runtime, which is what keeps "API-only" true rather than merely intended.
 
-import { experiences } from "@/lib/content/experiences";
-import { projects } from "@/lib/content/projects";
-import { skillCategories } from "@/lib/content/skills";
-
-const BACKEND_URL = process.env.BACKEND_INTERNAL_URL;
+// Read lazily instead of at module scope. The value only exists at runtime —
+// `next build` runs without it, so a module-scope const would capture `undefined`
+// and there'd be no way to tell "unset" from "set after the module loaded".
+// Trailing slashes are trimmed so both `http://backend:8000` and
+// `http://backend:8000/` yield a single-slash request path.
+function getBackendUrl(): string | undefined {
+  return (
+    process.env.BACKEND_INTERNAL_URL?.trim().replace(/\/+$/, "") || undefined
+  );
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type Experience = (typeof experiences)[number];
-export type SkillCategory = (typeof skillCategories)[number];
-export type Project = (typeof projects)[number];
+// Declared explicitly rather than derived from `lib/content/*` via `typeof`: deriving
+// would re-introduce a runtime import of the content just to get its type, and it would
+// let a one-off field in the seed data silently widen the wire contract. The content
+// files `satisfies` these instead, so the arrow points seed-data → contract, not back.
+// Optionality mirrors the guards below — those four fields are not required to render.
+export interface ExperienceHighlight {
+  category: string;
+  items: string[];
+}
+
+export interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  highlights: ExperienceHighlight[];
+  location?: string;
+  type?: string;
+}
+
+export interface SkillCategory {
+  title: string;
+  skills: string[];
+}
+
+export interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  category: string;
+  liveUrl?: string;
+  githubUrl?: string;
+}
 
 export interface PortfolioData {
   experiences: Experience[];
@@ -77,8 +115,8 @@ function isPortfolioData(v: unknown): v is PortfolioData {
 
 // ─── Fetch from backend ───────────────────────────────────────────────────────
 
-async function fetchPortfolioFromAPI(): Promise<PortfolioData> {
-  const res = await fetch(`${BACKEND_URL}/api/v2/portfolio/content`, {
+async function fetchPortfolioFromAPI(baseUrl: string): Promise<PortfolioData> {
+  const res = await fetch(`${baseUrl}/api/v2/portfolio/content`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     next: { revalidate: 300 }, // ISR: refresh every 5 minutes
@@ -95,33 +133,47 @@ async function fetchPortfolioFromAPI(): Promise<PortfolioData> {
   return json;
 }
 
-// ─── Fallback to static data.ts ──────────────────────────────────────────────
-
-function getFallbackData(): PortfolioData {
-  return { experiences, skillCategories, projects };
-}
-
 // ─── Public API ───────────────────────────────────────────────────────────────
 
+/**
+ * The backend is the only source of portfolio content. Every failure path THROWS
+ * rather than degrading, which is the whole point of removing the static fallback:
+ * a silent degrade is indistinguishable from healthy, and that is exactly how the
+ * site shipped fabricated-looking content for weeks without anyone noticing.
+ *
+ * Throwing is safe under the route's ISR (`export const revalidate = 300` in
+ * app/page.tsx): a failed REVALIDATION keeps serving the last good render, so a
+ * transient backend blip is invisible to visitors. Only a cold render with no
+ * cached page surfaces the error — which is the case you genuinely want to see.
+ *
+ * An EMPTY-but-valid response is also an error: the DB is only empty before it has
+ * ever been seeded (`npm run seed:portfolio`), and rendering a portfolio with no
+ * experience, skills or projects is worse than rendering nothing.
+ */
 export async function fetchPortfolioData(): Promise<PortfolioData> {
-  // No backend configured — use static content. The Docker compose deploy
-  // sets BACKEND_INTERNAL_URL; standalone deploys (Vercel etc.) skip the
-  // fetch entirely.
-  if (!BACKEND_URL) return getFallbackData();
-
-  try {
-    const data = await fetchPortfolioFromAPI();
-    // If DB is empty (seeding hasn't happened yet), fall back to static data
-    if (
-      !data.experiences?.length &&
-      !data.skillCategories?.length &&
-      !data.projects?.length
-    ) {
-      return getFallbackData();
-    }
-    return data;
-  } catch {
-    console.warn("Portfolio API fetch failed, using fallback data");
-    return getFallbackData();
+  // BACKEND_INTERNAL_URL is injected by the compose deploy that owns this service
+  // (trovie/infra/docker-compose.prod.yml, the `portfolio` service) and by .env.local
+  // for local dev. Unset now means MISCONFIGURED, not "standalone deploy".
+  const backendUrl = getBackendUrl();
+  if (!backendUrl) {
+    throw new Error(
+      "BACKEND_INTERNAL_URL is not set — portfolio content has no source. " +
+        "Set it on the `portfolio` service (see trovie/infra/docker-compose.prod.yml).",
+    );
   }
+
+  const data = await fetchPortfolioFromAPI(backendUrl);
+
+  if (
+    !data.experiences.length &&
+    !data.skillCategories.length &&
+    !data.projects.length
+  ) {
+    throw new Error(
+      "Portfolio API returned no content — the database has not been seeded. " +
+        "Run `npm run seed:portfolio` against the backend.",
+    );
+  }
+
+  return data;
 }

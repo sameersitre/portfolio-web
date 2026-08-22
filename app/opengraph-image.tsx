@@ -1,8 +1,10 @@
 import { ImageResponse } from "next/og";
 
+import { siteConfig, siteTitle } from "@/lib/site-config";
+
 export const runtime = "edge";
 
-export const alt = "Sameer Sitre — Software Engineer Portfolio";
+export const alt = `${siteTitle} Portfolio`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -82,7 +84,7 @@ export default function Image() {
             letterSpacing: "-1px",
           }}
         >
-          Sameer Sitre
+          {siteConfig.name}
         </h1>
 
         <p

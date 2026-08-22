@@ -1,4 +1,7 @@
 // Skill categories shown in the Skills section.
+// SEED SOURCE ONLY — see lib/content/experiences.ts.
+
+import type { SkillCategory } from "@/lib/portfolio";
 
 export const skillCategories = [
   {
@@ -7,7 +10,14 @@ export const skillCategories = [
   },
   {
     title: "Frameworks",
-    skills: ["React", "Next.js", "React Native", "Redux Toolkit", "React Query", "Zustand"],
+    skills: [
+      "React",
+      "Next.js",
+      "React Native",
+      "Redux Toolkit",
+      "React Query",
+      "Zustand",
+    ],
   },
   {
     title: "UI & Styling",
@@ -23,14 +33,27 @@ export const skillCategories = [
   },
   {
     title: "Integrations",
-    skills: ["Stripe", "Google Maps", "Firebase", "LiveKit", "GraphQL", "REST", "OpenAPI"],
+    skills: [
+      "Stripe",
+      "Google Maps",
+      "Firebase",
+      "LiveKit",
+      "GraphQL",
+      "REST",
+      "OpenAPI",
+    ],
   },
   {
     title: "AI",
-    skills: ["Claude Code", "Claude Agents", "Claude Skills", "Prompt Engineering"],
+    skills: [
+      "Claude Code",
+      "Claude Agents",
+      "Claude Skills",
+      "Prompt Engineering",
+    ],
   },
   {
     title: "DevOps",
     skills: ["CI/CD", "TeamCity", "Git", "GitHub Actions"],
   },
-];
+] satisfies SkillCategory[];

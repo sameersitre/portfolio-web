@@ -16,6 +16,27 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment variables
+
+Copy `.env.example` to `.env.local` and fill in what you need — every variable is
+optional and the app degrades to bundled static content without them.
+
+| Variable               | Scope                  | Effect when unset                                                            |
+| ---------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| `BACKEND_INTERNAL_URL` | server, runtime        | Skips the `POST /api/v2/portfolio/content` fetch and renders `lib/content/*` |
+| `GITHUB_TOKEN`         | server, runtime        | Falls back to `lib/github/mock.ts`                                           |
+| `NEXT_PUBLIC_GA_ID`    | client, **build time** | Analytics disabled                                                           |
+
+`NEXT_PUBLIC_GA_ID` is inlined into the client bundle, so it must be present during
+`next build` — the Dockerfile takes it as `--build-arg`. The other two are read at
+request time and are supplied as container `environment:` entries.
+
+`BACKEND_INTERNAL_URL` is set for the deployed container by the `portfolio` service
+in `trovie/infra/docker-compose.prod.yml` (`http://backend:8000`); it is deliberately
+**not** a build arg, because the compose network doesn't exist during `docker build`.
+As a result `/` is prerendered with static fallback content at build time and picks up
+live backend data on the first ISR revalidation (`revalidate = 300` in `app/page.tsx`).
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

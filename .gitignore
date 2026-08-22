@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+# Deploy/seed target template. The real .env.deploy stays ignored by the rule above —
+# this repo is PUBLIC, so host/user/key/secret values must never be committed.
+!.env.deploy.example
 
 # vercel
 .vercel
