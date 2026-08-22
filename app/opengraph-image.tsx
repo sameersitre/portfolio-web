@@ -94,7 +94,7 @@ export default function Image() {
             margin: 0,
           }}
         >
-          Senior Frontend Engineer
+          {siteConfig.title}
         </p>
 
         <div

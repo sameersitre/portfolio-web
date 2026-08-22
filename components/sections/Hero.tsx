@@ -92,15 +92,14 @@ export function Hero() {
           variants={item}
           className="mt-2 text-3xl font-bold tracking-tight text-muted-foreground sm:text-5xl md:text-6xl"
         >
-          I build things for the web.
+          {siteConfig.tagline}
         </motion.h2>
 
         <motion.p
           variants={item}
           className="mt-6 max-w-xl text-lg text-muted-foreground"
         >
-          Senior Frontend Engineer with 7+ years of experience delivering
-          secure, scalable web and mobile applications.
+          {siteConfig.description}
         </motion.p>
 
         <motion.div variants={item} className="mt-10 flex gap-4">

@@ -2,7 +2,7 @@
 
 // Projects section: filter tabs + animated grid of project cards.
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Folder } from "lucide-react";
 import { GithubIcon } from "@/components/ui/BrandIcons";
@@ -17,19 +17,28 @@ interface Props {
   projects: Project[];
 }
 
-const filters = ["All", "Web", "Mobile", "Library"] as const;
-type Filter = (typeof filters)[number];
+const ALL = "All";
 
 const container = staggerContainer(0.1);
 const cardItem = fadeUp(0.5);
 
 export function Projects({ projects }: Props) {
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const [activeFilter, setActiveFilter] = useState<string>(ALL);
+
+  // Tabs come from the data, not a hardcoded list: a project published with a new
+  // category gets a tab automatically instead of silently becoming unfilterable.
+  // First-seen order is preserved so the seed controls tab order.
+  const filters = useMemo(
+    () => [ALL, ...new Set(projects.map((p) => p.category))],
+    [projects],
+  );
+
+  // A category can disappear between renders (re-seed, or a filter left selected
+  // while the content changed) — fall back to All rather than showing an empty grid.
+  const active = filters.includes(activeFilter) ? activeFilter : ALL;
 
   const filteredProjects =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
+    active === ALL ? projects : projects.filter((p) => p.category === active);
 
   return (
     <Section id="projects">
@@ -46,7 +55,7 @@ export function Projects({ projects }: Props) {
             }}
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-all",
-              activeFilter === filter
+              active === filter
                 ? "bg-accent text-accent-foreground"
                 : "bg-muted text-muted-foreground hover:text-foreground",
             )}
@@ -58,7 +67,7 @@ export function Projects({ projects }: Props) {
 
       {/* Project grid */}
       <motion.div
-        key={activeFilter}
+        key={active}
         variants={container}
         initial="hidden"
         animate="show"

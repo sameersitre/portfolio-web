@@ -7,6 +7,7 @@ import { GitHub } from "@/components/sections/github/GitHub";
 import { Contact } from "@/components/sections/Contact";
 import { fetchGitHubData } from "@/lib/github";
 import { fetchPortfolioData } from "@/lib/portfolio";
+import { buildHomepageJsonLd } from "@/lib/seo/jsonLd";
 
 // Force ISR at the route level — revalidate every 5 minutes
 // This ensures the page re-renders even when build-time fetches fail
@@ -20,8 +21,19 @@ export default async function Home() {
 
   return (
     <>
+      {/* Structured data built from the same payload the sections render, so the
+          schema.org profile tracks the published content automatically. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildHomepageJsonLd(portfolioData)),
+        }}
+      />
       <Hero />
-      <About />
+      <About
+        paragraphs={portfolioData.aboutParagraphs}
+        stats={portfolioData.stats}
+      />
       <Experience experiences={portfolioData.experiences} />
       <Skills skillCategories={portfolioData.skillCategories} />
       <Projects projects={portfolioData.projects} />

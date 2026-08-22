@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { SkipToContent } from "@/components/ui/SkipToContent";
 import { ANALYTICS_ENABLED, GA_ID } from "@/lib/analytics/config";
-import { homepageJsonLd } from "@/lib/seo/jsonLd";
 import { siteConfig, siteTitle } from "@/lib/site-config";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
@@ -36,12 +35,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: siteTitle,
-  description:
-    "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications. React, Next.js, React Native, TypeScript.",
+  description: `${siteConfig.description} React, Next.js, React Native, Node.js, TypeScript.`,
   keywords: [
     siteConfig.name,
-    "Frontend Engineer",
+    siteConfig.title,
     "Software Engineer",
+    "Full Stack Engineer",
     "React",
     "Next.js",
     "React Native",
@@ -102,10 +101,6 @@ export default function RootLayout({
           name="theme-color"
           content="#0a0a0a"
           media="(prefers-color-scheme: dark)"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }}
         />
       </head>
       <body

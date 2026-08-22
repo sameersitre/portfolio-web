@@ -6,18 +6,17 @@ import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { fadeUp, staggerContainer } from "@/lib/animations";
+import type { Stat } from "@/lib/portfolio";
 
-const stats = [
-  { value: "7+", label: "Years Experience" },
-  { value: "3", label: "Companies" },
-  { value: "20+", label: "Production Releases" },
-  { value: "1000s", label: "Users Served" },
-];
+interface Props {
+  paragraphs: string[];
+  stats: Stat[];
+}
 
 const statsContainer = staggerContainer(0.1, 0.2);
 const statItem = fadeUp(0.5);
 
-export function About() {
+export function About({ paragraphs, stats }: Props) {
   return (
     <Section id="about">
       <SectionHeading title="About" subtitle="A few things about me" />
@@ -25,28 +24,9 @@ export function About() {
       <div className="grid gap-12 md:grid-cols-5">
         {/* Text — 3 columns */}
         <div className="space-y-4 text-muted-foreground md:col-span-3">
-          <p>
-            I&apos;m a software engineer who loves building products that people
-            actually use. With 7+ years in the industry, I&apos;ve shipped
-            production features to thousands of users across global markets.
-          </p>
-          <p>
-            My expertise spans web and mobile development — from design system
-            architecture and performance optimisation to end-to-end test
-            automation and security hardening. I&apos;ve led UI library
-            migrations, built real-time chat systems, and orchestrated 20+
-            production releases across multiple engineering teams.
-          </p>
-          <p>
-            Currently at <span className="text-accent">The Real Brokerage</span>
-            , I work across both web (React + TypeScript) and mobile (React
-            Native) platforms. I&apos;m passionate about AI-driven development
-            workflows and building tools that make developers more productive.
-          </p>
-          <p>
-            When I&apos;m not coding, you&apos;ll find me cycling, playing
-            chess, or exploring the latest in AI and open source.
-          </p>
+          {paragraphs.map((text) => (
+            <p key={text.slice(0, 48)}>{text}</p>
+          ))}
         </div>
 
         {/* Profile image placeholder — 2 columns */}

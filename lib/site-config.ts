@@ -5,9 +5,10 @@
 
 export const siteConfig = {
   name: "Sameer Sitre",
-  title: "Software Engineer",
+  title: "Senior Software Engineer",
   description:
-    "Senior Frontend Engineer with 7+ years of experience building secure, scalable web and mobile applications.",
+    "Senior Software Engineer with 7+ years of experience building secure, scalable web, mobile and backend systems.",
+  tagline: "I build products end to end.",
   url: "https://sameersitre.dev",
   email: "sameersitre@gmail.com",
   phone: "+91 7030552747",

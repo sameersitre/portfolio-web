@@ -21,6 +21,10 @@ const MONTHS = [
   "Dec",
 ];
 
+// One week column = 10px cell (w-2.5) + 3px gap (gap-0.75). Month labels are
+// positioned on this pitch so they line up with the grid below.
+const WEEK_PITCH_PX = 13;
+
 const levelColors = {
   0: "bg-muted",
   1: "bg-amber-900/40",
@@ -61,24 +65,24 @@ export function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
   return (
     <div className="overflow-x-auto">
       <div className="min-w-180">
-        {/* Month labels */}
-        <div className="mb-1 flex pl-8">
-          {monthLabels.map(({ label, col }, i) => (
-            <span
-              key={`${label}-${i}`}
-              className="text-xs text-muted-foreground"
-              style={{
-                position: "relative",
-                left: `${col * 13}px`,
-                marginRight:
-                  i < monthLabels.length - 1
-                    ? `${((monthLabels[i + 1]?.col ?? col) - col) * 13 - 24}px`
-                    : 0,
-              }}
-            >
-              {label}
-            </span>
-          ))}
+        {/* Month labels — absolutely positioned inside a relative track so each
+            one sits exactly above its week column. The previous flow-based
+            version double-counted the offset: the flex margins already advanced
+            each label by `col * WEEK_PITCH_PX`, and `left` then added the same
+            amount again, so labels drifted twice as far right as the grid and
+            the year looked like it ended in April. */}
+        <div className="mb-1 pl-8">
+          <div className="relative h-4">
+            {monthLabels.map(({ label, col }, i) => (
+              <span
+                key={`${label}-${i}`}
+                className="absolute top-0 text-xs text-muted-foreground"
+                style={{ left: `${col * WEEK_PITCH_PX}px` }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Grid */}
@@ -105,7 +109,7 @@ export function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
                   return (
                     <div
                       key={day.date}
-                      className="h-2.5 w-2.5 rounded-xs opacity-40"
+                      className="h-2.5 w-2.5 rounded-xs bg-muted opacity-40"
                     />
                   );
                 }
@@ -139,10 +143,7 @@ export function ContributionGrid({ weeks }: { weeks: ContributionWeek[] }) {
           {([0, 1, 2, 3, 4] as const).map((level) => (
             <div
               key={level}
-              className={cn(
-                "h-2.5 w-2.5 rounded-xs",
-                levelColors[level],
-              )}
+              className={cn("h-2.5 w-2.5 rounded-xs", levelColors[level])}
             />
           ))}
           <span>More</span>
