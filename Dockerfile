@@ -38,7 +38,14 @@ ENV BACKEND_INTERNAL_URL=${BACKEND_INTERNAL_URL}
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN npm run build
+# GITHUB_TOKEN as a BuildKit secret, not an ARG: it is a credential, and a build arg is
+# recorded in image history. Without it `next build` prerenders the GitHub section from
+# lib/github/mock.ts — which publishes INVENTED stats (42 stars against a real 2) to every
+# visitor until the first ISR revalidation. Mounted, never copied into a layer; the build
+# still succeeds without it, falling back to mock exactly as before.
+RUN --mount=type=secret,id=github_token \
+    GITHUB_TOKEN="$(cat /run/secrets/github_token 2>/dev/null || true)" \
+    npm run build
 
 # ─── Stage 3: Production runner ─────────────────────
 FROM base AS runner

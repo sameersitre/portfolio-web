@@ -52,10 +52,17 @@ export interface Project {
   githubUrl?: string;
 }
 
+export interface Stat {
+  value: string;
+  label: string;
+}
+
 export interface PortfolioData {
   experiences: Experience[];
   skillCategories: SkillCategory[];
   projects: Project[];
+  aboutParagraphs: string[];
+  stats: Stat[];
 }
 
 // ─── Runtime validation ──────────────────────────────────────────────────────
@@ -100,6 +107,12 @@ function isProject(v: unknown): v is Project {
   );
 }
 
+function isStat(v: unknown): v is Stat {
+  if (!v || typeof v !== "object") return false;
+  const o = v as Record<string, unknown>;
+  return typeof o.value === "string" && typeof o.label === "string";
+}
+
 function isPortfolioData(v: unknown): v is PortfolioData {
   if (!v || typeof v !== "object") return false;
   const o = v as Record<string, unknown>;
@@ -109,7 +122,10 @@ function isPortfolioData(v: unknown): v is PortfolioData {
     Array.isArray(o.skillCategories) &&
     o.skillCategories.every(isSkillCategory) &&
     Array.isArray(o.projects) &&
-    o.projects.every(isProject)
+    o.projects.every(isProject) &&
+    isStringArray(o.aboutParagraphs) &&
+    Array.isArray(o.stats) &&
+    o.stats.every(isStat)
   );
 }
 
@@ -164,14 +180,24 @@ export async function fetchPortfolioData(): Promise<PortfolioData> {
 
   const data = await fetchPortfolioFromAPI(backendUrl);
 
-  if (
-    !data.experiences.length &&
-    !data.skillCategories.length &&
-    !data.projects.length
-  ) {
+  // ANY empty type is a failed seed, not just an all-empty response: a partial seed
+  // renders a portfolio silently missing a whole section, which reads as healthy.
+  const empty = (
+    [
+      ["experiences", data.experiences],
+      ["skillCategories", data.skillCategories],
+      ["projects", data.projects],
+      ["aboutParagraphs", data.aboutParagraphs],
+      ["stats", data.stats],
+    ] as const
+  )
+    .filter(([, v]) => !v.length)
+    .map(([k]) => k);
+
+  if (empty.length) {
     throw new Error(
-      "Portfolio API returned no content — the database has not been seeded. " +
-        "Run `npm run seed:portfolio` against the backend.",
+      `Portfolio API returned no content for: ${empty.join(", ")} — the database ` +
+        "has not been fully seeded. Run `npm run seed:portfolio` against the backend.",
     );
   }
 

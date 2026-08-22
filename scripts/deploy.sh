@@ -120,15 +120,29 @@ do_build() {
     warn "NEXT_PUBLIC_GA_ID unset — analytics will be inert in this image"
   fi
 
+  # Passed as a BuildKit SECRET, not a build arg — it is a credential (see Dockerfile).
+  # Without it the prerender falls back to lib/github/mock.ts, which publishes invented
+  # GitHub stats until ISR revalidates. Build still works without it.
+  local secret_args=()
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    secret_args=(--secret "id=github_token,env=GITHUB_TOKEN")
+  else
+    warn "GITHUB_TOKEN unset — GitHub section will prerender from MOCK data"
+  fi
+
   log "Building ${IMAGE} (${PLATFORM}), prerendering from ${API_BASE_URL}..."
-  docker build --platform "$PLATFORM" "${args[@]}" -t "$IMAGE" .
+  DOCKER_BUILDKIT=1 docker build --platform "$PLATFORM" "${args[@]}" "${secret_args[@]+"${secret_args[@]}"}" -t "$IMAGE" .
   ok "Built ${IMAGE}"
 }
 
 do_ship() {
   local tarball
   tarball="$(mktemp -t portfolio-image-XXXXXX).tar.gz"
-  trap 'rm -f "$tarball"' RETURN
+  # A RETURN trap is NOT scoped to the function that sets it: bash leaves it installed, so
+  # it fires again when the CALLER returns — by which point `tarball` (a local here) is out
+  # of scope, and `set -u` then aborts an already-successful deploy with "unbound variable".
+  # Guard the expansion and uninstall the trap the first time it runs.
+  trap 'rm -f "${tarball:-}"; trap - RETURN' RETURN
 
   log "Exporting image..."
   docker save "$IMAGE" | gzip > "$tarball"
@@ -235,8 +249,13 @@ show_menu() {
   read -rp "$(echo -e "${CYAN}▸${NC} Choose [1]: ")" choice
   choice="${choice:-1}"
 
+  # `if confirm; then work; fi` — NOT `confirm && work || info`. A function on the right of
+  # `&&` runs in a CONDITIONAL CONTEXT, which suppresses `set -e` for it and everything it
+  # calls. Under the old form a failing `docker build` did not abort: the script printed
+  # "Built", then exported and shipped the PREVIOUS image to the VM while reporting success,
+  # and swallowed the non-zero exit so CI saw a clean run. Only an `if` body keeps `set -e`.
   case "$choice" in
-    1) confirm "Deploy $(version) to ${DOMAIN}?" && do_deploy || info "Cancelled" ;;
+    1) if confirm "Deploy $(version) to ${DOMAIN}?"; then do_deploy; else info "Cancelled"; fi ;;
     2) echo ""
        echo "  1) patch   2) minor   3) major"
        read -rp "$(echo -e "${CYAN}▸${NC} Increment [1]: ")" bump
@@ -244,9 +263,9 @@ show_menu() {
          1|patch) bump=patch ;; 2|minor) bump=minor ;; 3|major) bump=major ;;
          *) err "Invalid choice"; exit 1 ;;
        esac
-       confirm "Bump ${bump} and deploy to ${DOMAIN}?" && do_deploy "$bump" || info "Cancelled" ;;
+       if confirm "Bump ${bump} and deploy to ${DOMAIN}?"; then do_deploy "$bump"; else info "Cancelled"; fi ;;
     3) do_build ;;
-    4) confirm "Overwrite portfolio content on ${API_BASE_URL}?" && do_seed || info "Cancelled" ;;
+    4) if confirm "Overwrite portfolio content on ${API_BASE_URL}?"; then do_seed; else info "Cancelled"; fi ;;
     5) do_seed --local ;;
     6) do_status ;;
     7) do_logs ;;

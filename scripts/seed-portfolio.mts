@@ -14,15 +14,17 @@
  * Runs on Node's native type stripping (v22.6+), so it needs no ts-runner dependency —
  * which is why the relative imports carry an explicit `.ts` extension.
  *
- * Seeds ALL THREE types or exits non-zero. A partial seed is the one genuinely bad
+ * Seeds EVERY type or exits non-zero. A partial seed is the one genuinely bad
  * outcome: the reader treats "some content" as success, so a half-seeded DB renders a
- * portfolio silently missing a whole section.
+ * portfolio silently missing a whole section. A preflight check refuses to write at all
+ * unless the target backend accepts every type in PAYLOADS.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { aboutParagraphs, stats } from "../lib/content/about.ts";
 import { experiences } from "../lib/content/experiences.ts";
 import { projects } from "../lib/content/projects.ts";
 import { skillCategories } from "../lib/content/skills.ts";
@@ -47,6 +49,8 @@ const PAYLOADS = [
   { type: "experiences", data: experiences },
   { type: "skillCategories", data: skillCategories },
   { type: "projects", data: projects },
+  { type: "aboutParagraphs", data: aboutParagraphs },
+  { type: "stats", data: stats },
 ] as const;
 
 /**
@@ -110,12 +114,44 @@ async function seedOne(
   console.log(`  ✓ ${type.padEnd(16)} ${body}`);
 }
 
+/**
+ * Refuse to write anything unless the target backend accepts EVERY type we are about to send.
+ *
+ * `/portfolio/content` always echoes one key per type the backend knows about (it spreads an
+ * EMPTY_CONTENT default), so the response keys ARE the server's accepted-type list. Checking
+ * first turns "three types overwritten, then HTTP 400 halfway through" into a clean refusal
+ * that names the missing types and the deploy needed to fix it.
+ */
+async function assertBackendAcceptsAllTypes(): Promise<void> {
+  const res = await fetch(`${BASE}/api/v2/portfolio/content`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+  if (!res.ok) {
+    throw new Error(`preflight: ${BASE} returned HTTP ${res.status}`);
+  }
+
+  const supported = new Set(Object.keys((await res.json()) as object));
+  const missing = PAYLOADS.map((p) => p.type).filter((t) => !supported.has(t));
+
+  if (missing.length) {
+    throw new Error(
+      `${BASE} does not accept: ${missing.join(", ")}. Nothing was written. ` +
+        "That backend predates these content types — deploy the trovie backend " +
+        "(VALID_TYPES in portfolio.controllers.ts), then re-run this seed.",
+    );
+  }
+}
+
 async function main(): Promise<void> {
   if (!BASE) {
     throw new Error(
       "No target. Set API_BASE_URL in .env.deploy, pass PORTFOLIO_API_URL, or use --local.",
     );
   }
+
+  await assertBackendAcceptsAllTypes();
 
   const secret = resolveSecret();
   console.log(`Seeding portfolio content → ${BASE}`);
