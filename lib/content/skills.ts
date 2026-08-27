@@ -44,6 +44,32 @@ export const skillCategories = [
     skills: ["React Hook Form", "Zod", "Yup"],
   },
   {
+    title: "Backend",
+    skills: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Redis",
+      "JWT / OAuth 2.0",
+      "Auth.js",
+      "Rate limiting",
+      "Caching strategy",
+    ],
+  },
+  {
+    title: "Infrastructure",
+    skills: [
+      "Docker",
+      "docker compose",
+      "nginx",
+      "Let's Encrypt",
+      "GCP",
+      "Fastlane",
+      "npm workspaces",
+      "Monorepo tooling",
+    ],
+  },
+  {
     title: "UI & Styling",
     skills: [
       "Tailwind CSS",
@@ -93,6 +119,8 @@ export const skillCategories = [
     title: "Integrations",
     skills: [
       "Stripe",
+      "RevenueCat",
+      "AdMob",
       "Firebase Cloud Messaging",
       "Google Maps & Places",
       "LiveKit",
@@ -104,10 +132,13 @@ export const skillCategories = [
     title: "AI",
     skills: [
       "Claude Code",
+      "Claude API",
       "Claude Agents",
       "Claude Skills",
       "MCP",
       "Prompt Engineering",
+      "LLM cost control",
+      "Grounded generation",
     ],
   },
   {

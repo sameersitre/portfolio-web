@@ -5,6 +5,69 @@ import type { Project } from "@/lib/portfolio";
 
 export const projects = [
   {
+    title: "Trovie",
+    description:
+      "A streaming content-discovery product built and operated solo: a React Native 0.84 app published on Google Play, a Next.js 16 web client, and an Express + MongoDB + Redis backend behind nginx on a single GCP VM. 577 commits over six months, 67k lines, 477 server tests across 34 suites. Live in production — it also serves the content on this site.",
+    tech: [
+      "React Native",
+      "Next.js",
+      "TypeScript",
+      "Express",
+      "MongoDB",
+      "Redis",
+      "Docker",
+      "nginx",
+    ],
+    liveUrl: "https://trovie.sameersitre.dev",
+    githubUrl: "",
+    category: "Full Stack",
+  },
+  {
+    title: "@trovie/contract",
+    description:
+      "A schema-first Zod package that is the single place any API wire type is declared. One set of schemas derives three artifacts: inferred TypeScript types imported by 101 source files, Express validate middleware that coerces and strips unknown keys, and a 66-path OpenAPI document. Split into four build entries so admin shapes and Zod itself never reach the mobile bundle. Grew +4,394/−642 lines over 67 commits — near-purely additive, which is the empirical test that a schema design was right.",
+    tech: ["TypeScript", "Zod", "OpenAPI", "tsup", "npm workspaces"],
+    liveUrl: "https://trovie.sameersitre.dev/api/docs/",
+    githubUrl: "",
+    category: "Library",
+  },
+  {
+    title: "Watchmode Quota Engine",
+    description:
+      "Streaming-availability lookups are capped at 2,500 vendor credits a month and cost two credits each, so the budget — not compute — is the binding constraint. Rebuilt three times over eight weeks: a per-title resolver with Redis counters, then multi-key rotation with parking and re-probing, then the realisation that the vendor returns quota headers on every response and a status probe costs nothing. The local counters were deleted. Each generation failed the same way — a local estimate of a remote resource drifts.",
+    tech: ["TypeScript", "Redis", "Node.js", "Jest"],
+    liveUrl: "",
+    githubUrl: "",
+    category: "Backend",
+  },
+  {
+    title: "OAuth Token Broker",
+    description:
+      "Replaced a per-request round-trip to Google's tokeninfo endpoint — which put Google's availability on the critical path of every write — with Trovie issuing its own tokens: a 15-minute HS256 access JWT verified locally with zero network and zero DB, plus an opaque rotating refresh token stored only as a SHA-256 hash. Rotation is a single atomic conditional update that closes the TOCTOU race, with a 10-second grace window for benign double-refresh and full session revocation on genuine replay.",
+    tech: ["TypeScript", "Express", "MongoDB", "jose", "JWT", "OAuth 2.0"],
+    liveUrl: "",
+    githubUrl: "",
+    category: "Backend",
+  },
+  {
+    title: "Grounded Generative UI",
+    description:
+      "Four LLM-backed surfaces — chat assistant, character bios, relationship graphs and wiki-grounded lore Q&A — where the model never emits data. It picks a layout; the server hydrates it from the real catalogue, so the product cannot hallucinate a title that does not exist. Spend is held down by fail-closed monthly Redis budgets reconciled against a durable Mongo ledger, atomic pending sentinels that make double-charging structurally impossible, and permanent verbatim answer caches.",
+    tech: ["TypeScript", "Claude API", "Redis", "MongoDB", "Zod"],
+    liveUrl: "",
+    githubUrl: "",
+    category: "AI",
+  },
+  {
+    title: "Push & Re-engagement Platform",
+    description:
+      "Five notification kinds driven by an hourly scheduler that holds a Redis lock so replicas cannot double-send, an anti-swarm queue that spaces delivery, segmented audience targeting, and a superadmin console for composing and previewing sends. Claims fail closed on purpose: a missed push is invisible to the user, a duplicate is a support ticket. Paired with RevenueCat subscriptions whose entitlement mirror is re-read-authoritative rather than trusting the webhook.",
+    tech: ["TypeScript", "Express", "Redis", "Firebase", "RevenueCat", "AdMob"],
+    liveUrl: "",
+    githubUrl: "",
+    category: "Backend",
+  },
+  {
     title: "Create Transaction & Listing",
     description:
       "The wizards that let a brokerage retire its third-party transaction vendor. A 16-step transaction flow and a 5-step listing flow on one generic step machine, with declarative predicates so US, Canadian and dual-agency deals render different paths from a single graph — plus per-step server autosave. 101 commits over 7 months across 102 files.",
